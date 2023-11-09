@@ -1,4 +1,4 @@
-![Visual Editor Logo](https://i.imgur.com/iy2QEHC.png)
+![Visual Editor Logo](https://i.imgur.com/VhjikA2.png)
 
 ## Usage
 
