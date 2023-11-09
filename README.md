@@ -1,2 +1,2 @@
 #Adafruit GFX - Visual Editor To Code
-![Visual Editor Logo]([image.jpg](https://imgur.com/5aykXSW)https://imgur.com/5aykXSW.png)
+![Visual Editor Logo](https://i.imgur.com/5aykXSW.png)
