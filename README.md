@@ -1,12 +1,12 @@
 ![Visual Editor Logo](https://i.imgur.com/VhjikA2.png)
 
-## 🔎 Usage
+## Usage
 
-## 📝 Compatibility
+## Compatibility
 
-## 🚀 Features
+## Features
 
-## 📦 Setup
+## Setup
 
-## 🗺️ Roadmap
+## Roadmap
 
