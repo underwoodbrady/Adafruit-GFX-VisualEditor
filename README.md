@@ -27,10 +27,18 @@ Adafruit GFX Visual Editor is an online HTML canvas based visual editing softwar
 
 
 ## Setup
+### Backend (rust)
 
 ```bash
 cd backend
 cargo run 
+```
+
+### Frontend (sveltekit)
+
+```bash
+cd frontend
+npm run dev -- --open 
 ```
 ## Roadmap
 
