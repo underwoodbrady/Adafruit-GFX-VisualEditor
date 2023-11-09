@@ -26,19 +26,22 @@ Adafruit GFX Visual Editor is an online HTML canvas based visual editing softwar
 - _Create multi-step animations (Coming Soon)_
 
 
-## Setup
-### Backend (rust)
+## Local Setup
+
+Rust backend is currently not needed for the project to run locally.
+
+### Backend (Rust)
 
 ```bash
 cd backend
 cargo run 
 ```
 
-### Frontend (sveltekit)
+### Frontend (Sveltekit)
 
 ```bash
 cd frontend
 npm run dev -- --open 
 ```
 ## Roadmap
-
+TODO
