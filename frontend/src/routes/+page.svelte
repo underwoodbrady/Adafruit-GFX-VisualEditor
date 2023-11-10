@@ -4,6 +4,10 @@
     import TextButton from "$lib/components/TextButton.svelte";
     import Tool from "$lib/components/Tool.svelte";
 
+    import Highlight, { LineNumbers } from "svelte-highlight";
+    import arduino from "svelte-highlight/languages/arduino";
+    import arduinoLight from "svelte-highlight/styles/docco";
+
     let canvasTrueWidth: number = 320;
     let canvasTrueHeight: number = 170;
 
@@ -13,7 +17,28 @@
     let canvasDisplayedHeight: number = canvasTrueHeight * 2;
 
     let showCode: boolean = true;
+    type generatingStages =
+        | "Generating"
+        | "Optimizing"
+        | "Compiling"
+        | "Done"
+        | "Error";
+
+    let allHappyPathStages: generatingStages[] = [
+        "Generating",
+        "Optimizing",
+        "Compiling",
+        "Done",
+    ];
+    let currentStage: generatingStages = allHappyPathStages[3];
+
+    let code: string = `void drawRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);
+void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);`;
 </script>
+
+<svelte:head>
+    {@html arduinoLight}
+</svelte:head>
 
 <header
     class="flex justify-between items-center px-8 py-4 border-b border-neutral-400 bg-neutral-300 drop-shadow-sm fixed top-0 left-0 w-full z-50"
@@ -115,10 +140,12 @@
         >
             <!--Properties-->
             <div class="flex space-x-2 items-center">
-                <img src="/properties.svg" alt="Properties Icon" class="w-4"/>
+                <img src="/properties.svg" alt="Properties Icon" class="w-4" />
                 <p class="text-sm font-semibold mb-[2px]">Properties</p>
             </div>
-            <p class="text-center text-neutral-700 mt-6 text-xs">Select Object</p>
+            <p class="text-center text-neutral-700 mt-6 text-xs">
+                Select Object
+            </p>
         </div>
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">
@@ -138,19 +165,42 @@
     {#if showCode}
         <section class="pt-6 flex-col space-y-4">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <p class="font-semibold">Generating Code</p>
-                    <img src="/spinner.svg" alt="Spinner" class="animate-spin h-4"/>
+                <div class="flex items-center space-x-2">
+                    <p class="font-semibold">{currentStage}</p>
+                    {#if currentStage == "Done"}
+                        <img
+                            src="/check.svg"
+                            alt="Check Mark"
+                            class="h-6"
+                        />
+                    {:else if currentStage == "Error"}
+                        <img
+                            src="/spinner.svg"
+                            alt="Spinner"
+                            class="animate-spin h-4"
+                        />
+                    {:else}
+                        <img
+                            src="/spinner.svg"
+                            alt="Spinner"
+                            class="animate-spin h-4"
+                        />
+                    {/if}
                 </div>
                 <div class="flex items-center space-x-4">
-                    <IconButton onClick={()=>{}} icon="/copy.svg"/>
-                    <IconButton onClick={()=>{}} icon="/download.svg" filled/>
+                    <IconButton onClick={() => {}} icon="/copy.svg" />
+                    <IconButton
+                        onClick={() => {}}
+                        icon="/download.svg"
+                        filled
+                    />
                 </div>
             </div>
-            <div class="w-full h-96 bg-neutral-900 p-6">
-                <p class="text-emerald-500 text-sm">Code here...</p>
+            <div class="w-full border-neutral-900 border-2 text-sm">
+                <Highlight language={arduino} let:highlighted {code}>
+                    <LineNumbers {highlighted} wrapLines />
+                </Highlight>
             </div>
-       
         </section>
     {/if}
 </main>
