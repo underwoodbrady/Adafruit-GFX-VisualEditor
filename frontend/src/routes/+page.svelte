@@ -2,7 +2,11 @@
     import Color from "$lib/components/Color.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
     import TextButton from "$lib/components/TextButton.svelte";
-    import Tool from "$lib/components/Tool.svelte";
+    import ColorSelector from "$lib/containers/ColorSelector.svelte";
+    import Header from "$lib/containers/Header.svelte";
+    import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
+    import ToolSelector from "$lib/containers/ToolSelector.svelte";
+    import { onMount } from "svelte";
 
     import Highlight, { LineNumbers } from "svelte-highlight";
     import arduino from "svelte-highlight/languages/arduino";
@@ -23,7 +27,6 @@
         | "Compiling"
         | "Done"
         | "Error";
-
     let allHappyPathStages: generatingStages[] = [
         "Generating",
         "Optimizing",
@@ -31,62 +34,88 @@
         "Done",
     ];
     let currentStage: generatingStages = allHappyPathStages[3];
-
     let code: string = `void drawRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);
 void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);`;
+
+    let tools = [
+        {
+            name: "rect-open",
+            image: "/rect-open.svg",
+        },
+        {
+            name: "rect-closed",
+            image: "/rect-closed.svg",
+        },
+        {
+            name: "round-rect-open",
+            image: "/rect-open.svg",
+        },
+        {
+            name: "round-rect-closed",
+            image: "/rect-closed.svg",
+        },
+        {
+            name: "circle-open",
+            image: "/circle-open.svg",
+        },
+        {
+            name: "circle-closed",
+            image: "/circle-closed.svg",
+        },
+        {
+            name: "tri-open",
+            image: "/tri-open.svg",
+        },
+        {
+            name: "tri-closed",
+            image: "/tri-closed.svg",
+        },
+        {
+            name: "paint-brush",
+            image: "paint-brush.svg",
+        },
+        {
+            name: "paint-bucket",
+            image: "/paint-bucket.svg",
+        },
+        {
+            name: "text",
+            image: "/text.svg",
+        },
+    ];
+
+    type HEX = `#${string}`;
+
+    let colors: HEX[] = [
+        "#ff0000",
+        "#0000ff",
+        "#00ff00",
+        "#00ffff",
+        "#ff00ff",
+        "#ffff00",
+        "#000000",
+        "#ffffff",
+        "#",
+        "#",
+        "#",
+        "#",
+    ];
+
+    let selectedTool: {name:string, image:string};
+    let selectedColor: HEX;
+    let selectedObject;
+
+    onMount(() => {
+        selectedTool = tools[0];
+        selectedColor = colors[0];
+    });
 </script>
 
 <svelte:head>
     {@html arduinoLight}
 </svelte:head>
 
-<header
-    class="flex justify-between items-center px-8 py-4 border-b border-neutral-400 bg-neutral-300 drop-shadow-sm fixed top-0 left-0 w-full z-50"
->
-    <div class="flex items-center space-x-2">
-        <img src="/logo.svg" alt="Adafruit GFX Logo" class="h-4" />
-        <h1><span class="font-bold">Adafruit GFX</span> - Visual Editor</h1>
-    </div>
-    <nav>
-        <ul class="flex items-center space-x-6">
-            <li class="flex items-center space-x-2">
-                <img
-                    src="/display.svg"
-                    alt="Down Arrow"
-                    class="h-[15px] mt-[2px]"
-                />
-                <p class="font-semibold text-sm">
-                    OLED {canvasTrueWidth}x{canvasTrueHeight}
-                </p>
-                <img
-                    src="/down-arrow.svg"
-                    alt="Down Arrow"
-                    class="w-2 mt-[2px]"
-                />
-            </li>
-            <li class="flex items-center space-x-2">
-                <img
-                    src="/microcontroller.svg"
-                    alt="Down Arrow"
-                    class="w-4 mt-[2px]"
-                />
-                <p class="text-neutral-500 text-sm">Select Microcontroller</p>
-                <img
-                    src="/down-arrow-grey.svg"
-                    alt="Down Arrow"
-                    class="w-2 mt-[2px]"
-                />
-            </li>
-        </ul>
-    </nav>
-    <button
-        on:click={() => {}}
-        class="flex items-center space-x-2 p-2 -m-2 cursor-pointer hover:bg-neutral-200 duration-75"
-    >
-        <img src="/github.svg" alt="Github Logo" class="h-4" />
-        <p class="text-sm">Beta V0.2</p>
-    </button>
-</header>
+<Header choosenDisplay={`OLED ${canvasTrueWidth}x${canvasTrueHeight}`} />
 <main
     class="flex flex-col space-y-4 justify-center mt-[57px] pt-6 mx-auto"
     style={`width:${canvasDisplayedWidth}px`}
@@ -107,18 +136,7 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
     <section class="relative">
         <div class="absolute -left-[104px] top-0 grid grid-cols-2 gap-4">
             <!--Color Panel-->
-            <Color onClick={() => {}} color="#ff0000" selected />
-            <Color onClick={() => {}} color="#0000ff" />
-            <Color onClick={() => {}} color="#00ff00" />
-            <Color onClick={() => {}} color="#00ffff" />
-            <Color onClick={() => {}} color="#ff00ff" />
-            <Color onClick={() => {}} color="#ffff00" />
-            <Color onClick={() => {}} color="#000000" />
-            <Color onClick={() => {}} color="#ffffff" />
-            <Color onClick={() => {}} openSlot />
-            <Color onClick={() => {}} openSlot />
-            <Color onClick={() => {}} openSlot />
-            <Color onClick={() => {}} openSlot />
+            <ColorSelector {colors} {selectedColor} updateSelectedColor={(color)=>{selectedColor=color}} />
         </div>
         <div
             class="relative bg-white border-2 border-neutral-900"
@@ -139,40 +157,20 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
         >
             <!--Properties-->
-            <div class="flex space-x-2 items-center">
-                <img src="/properties.svg" alt="Properties Icon" class="w-4" />
-                <p class="text-sm font-semibold mb-[2px]">Properties</p>
-            </div>
-            <p class="text-center text-neutral-700 mt-6 text-xs">
-                Select Object
-            </p>
+            <PropertiesPanel />
         </div>
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">
         <!--Tools-->
-        <Tool icon="/rect-open.svg" onClick={() => {}} selected />
-        <Tool icon="/rect-closed.svg" onClick={() => {}} />
-        <Tool icon="/round-rect-open.svg" onClick={() => {}} />
-        <Tool icon="/round-rect-closed.svg" onClick={() => {}} />
-        <Tool icon="/circle-open.svg" onClick={() => {}} />
-        <Tool icon="/circle-closed.svg" onClick={() => {}} />
-        <Tool icon="/tri-open.svg" onClick={() => {}} />
-        <Tool icon="/tri-closed.svg" onClick={() => {}} />
-        <Tool icon="/paint-brush.svg" onClick={() => {}} additionalInfo />
-        <Tool icon="/paint-bucket.svg" onClick={() => {}} additionalInfo />
-        <Tool icon="/text.svg" onClick={() => {}} additionalInfo />
+        <ToolSelector {tools} {selectedTool} updateSelectedTool={(tool)=>{selectedTool=tool}} />
     </section>
     {#if showCode}
-        <section class="pt-6 flex-col space-y-4">
+        <section class="pt-6 flex-col space-y-4 pb-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <p class="font-semibold">{currentStage}</p>
                     {#if currentStage == "Done"}
-                        <img
-                            src="/check.svg"
-                            alt="Check Mark"
-                            class="h-6"
-                        />
+                        <img src="/check.svg" alt="Check Mark" class="h-6" />
                     {:else if currentStage == "Error"}
                         <img
                             src="/spinner.svg"
