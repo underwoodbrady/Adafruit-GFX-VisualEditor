@@ -6,11 +6,13 @@
     import Header from "$lib/containers/Header.svelte";
     import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
     import ToolSelector from "$lib/containers/ToolSelector.svelte";
+    import { objectListWritable } from "$lib/containers/objectList";
     import { onMount } from "svelte";
 
     import Highlight, { LineNumbers } from "svelte-highlight";
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
+    import { createFullCode } from "../createCode";
 
     let canvasTrueWidth: number = 320;
     let canvasTrueHeight: number = 170;
@@ -113,6 +115,11 @@
     let selectedColor: HEX;
     let selectedObject;
 
+    let generateCode = () => {
+        createFullCode("", [""], [""], $objectListWritable).then((c)=>{
+            code = c;
+        })}
+
     onMount(() => {
         selectedTool = tools[0];
         selectedColor = colors[0];
@@ -137,7 +144,7 @@
         <TextButton
             icon="/code.svg"
             text="Generate"
-            onClick={() => {}}
+            onClick={generateCode}
             filled
         />
     </section>

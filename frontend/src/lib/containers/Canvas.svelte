@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import CanvasOb from "../../CanvasOb";
-    import Cell from "../../Cell";
+    import CanvasOb from "../../classes/CanvasOb";
+    import Cell from "../../classes/Cell";
+    import { objectListWritable } from "./objectList";
 
     type HEX = `#${string}`;
 
@@ -9,8 +10,7 @@
     export let selectedTool: { name: string; image: string };
     export let canvasDisplayedWidth: number;
     export let canvasDisplayedHeight: number;
-    export let canvasScale: number;
-    
+    export let canvasScale: number;    
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
@@ -54,6 +54,12 @@
         let cellWidth = Math.round((mouseX - startingMouseX) / canvasScale);
         let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
 
+        //Error checking
+        if(cellX<0 || cellX>canvasDisplayedWidth || cellY<0 || cellY>canvasDisplayedHeight || cellX+cellWidth>canvasDisplayedWidth || cellY+cellHeight>canvasDisplayedHeight)
+            return;
+
+        //TODO: Make sure its drawn top left to bottom right too
+
         switch (selectedTool.name) {
             case "rect-open":
                 newObject = new CanvasOb(
@@ -96,6 +102,7 @@
             default:
         }
         if (newObject != undefined) objectList.push(newObject);
+        objectListWritable.set(objectList);
         console.log(newObject);
         mapObjectsToCells();
         drawCells();
