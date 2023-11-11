@@ -10,6 +10,7 @@
     export let canvasDisplayedWidth: number;
     export let canvasDisplayedHeight: number;
     export let canvasScale: number;
+    
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
@@ -17,7 +18,7 @@
 
     let cellList: Cell[][] = [];
     let objectList: CanvasOb[] = [];
-    let objectState: (typeof objectList)[] = []; //For undo feature
+    let objectStates: (typeof objectList)[] = []; //For undo feature
 
     let getMousePositions = (
         e: MouseEvent
