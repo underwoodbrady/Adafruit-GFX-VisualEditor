@@ -71,6 +71,10 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
             image: "/tri-closed.svg",
         },
         {
+            name: "line",
+            image: "/line.svg",
+        },
+        {
             name: "cursor",
             image: "/cursor.svg",
         },
