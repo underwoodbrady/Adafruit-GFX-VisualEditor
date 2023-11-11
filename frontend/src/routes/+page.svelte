@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Color from "$lib/components/Color.svelte";
     import IconButton from "$lib/components/IconButton.svelte";
     import TextButton from "$lib/components/TextButton.svelte";
+    import Canvas from "$lib/containers/Canvas.svelte";
     import ColorSelector from "$lib/containers/ColorSelector.svelte";
     import Header from "$lib/containers/Header.svelte";
     import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
@@ -48,11 +48,11 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
         },
         {
             name: "round-rect-open",
-            image: "/rect-open.svg",
+            image: "/round-rect-open.svg",
         },
         {
             name: "round-rect-closed",
-            image: "/rect-closed.svg",
+            image: "/round-rect-closed.svg",
         },
         {
             name: "circle-open",
@@ -69,6 +69,10 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
         {
             name: "tri-closed",
             image: "/tri-closed.svg",
+        },
+        {
+            name: "cursor",
+            image: "/cursor.svg",
         },
         {
             name: "paint-brush",
@@ -118,7 +122,7 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
 <Header choosenDisplay={`OLED ${canvasTrueWidth}x${canvasTrueHeight}`} />
 <main
     class="flex flex-col space-y-4 justify-center mt-[57px] pt-6 mx-auto"
-    style={`width:${canvasDisplayedWidth}px`}
+    style={`width:${canvasDisplayedWidth+4}px`}
 >
     <section class="flex items-center space-x-4 place-self-end">
         <!--Settings-->
@@ -140,7 +144,7 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
         </div>
         <div
             class="relative bg-white border-2 border-neutral-900"
-            style={`width:${canvasDisplayedWidth}px;height:${canvasDisplayedHeight}px`}
+            style={`width:${canvasDisplayedWidth+4}px;height:${canvasDisplayedHeight+4}px`}
         >
             <!--Canvas-->
             <p
@@ -151,7 +155,7 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
                     >({canvasDisplayedWidth}x{canvasDisplayedHeight})</span
                 >
             </p>
-            <canvas />
+            <Canvas {selectedColor} {selectedTool} {canvasDisplayedWidth} {canvasDisplayedHeight}/>
         </div>
         <div
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
