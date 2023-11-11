@@ -16,9 +16,10 @@
     let canvasTrueHeight: number = 170;
 
     //TODO: Add some logic on how much to scale based on true width
+    let canvasScale: number = 2;
 
-    let canvasDisplayedWidth: number = canvasTrueWidth * 2;
-    let canvasDisplayedHeight: number = canvasTrueHeight * 2;
+    let canvasDisplayedWidth: number = canvasTrueWidth * canvasScale;
+    let canvasDisplayedHeight: number = canvasTrueHeight * canvasScale;
 
     let showCode: boolean = true;
     type generatingStages =
@@ -34,8 +35,7 @@
         "Done",
     ];
     let currentStage: generatingStages = allHappyPathStages[3];
-    let code: string = `void drawRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);
-void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t radius, uint16_t color);`;
+    let code: string = ``;
 
     let tools = [
         {
@@ -159,7 +159,7 @@ void fillRoundRect(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint16_t ra
                     >({canvasDisplayedWidth}x{canvasDisplayedHeight})</span
                 >
             </p>
-            <Canvas {selectedColor} {selectedTool} {canvasDisplayedWidth} {canvasDisplayedHeight}/>
+            <Canvas {selectedColor} {selectedTool} {canvasDisplayedWidth} {canvasDisplayedHeight} {canvasScale}/>
         </div>
         <div
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
