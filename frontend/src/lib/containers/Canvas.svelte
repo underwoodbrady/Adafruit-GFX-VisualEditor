@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import CanvasOb from "../../classes/CanvasOb";
     import Cell from "../../classes/Cell";
-    import { objectListWritable } from "./objectList";
+    import { objectListWritable, selectedObject } from "./objectList";
 
     type HEX = `#${string}`;
 
@@ -98,7 +98,8 @@
             case "line":
                 break;
             case "cursor":
-                console.log(cellList[cellY][cellX]._object)
+                let ob = cellList[cellY][cellX]._object;
+                if(!(ob == undefined)) selectedObject.set(ob)
                 return;
             default:
         }
@@ -219,6 +220,11 @@
             }
         }
     };
+
+    let mapObjectToCells = (object: CanvasOb)=>{
+        //Map one object instead to prevent full redraw
+        //ONLY FULLY REDRAW IF PANEL IS EDITED OR UNDO
+    }
 
     onMount(() => {
         const res = canvas.getContext("2d");

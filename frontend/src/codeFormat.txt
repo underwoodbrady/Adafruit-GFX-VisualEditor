@@ -2,7 +2,7 @@
 `Hardware-specific library import`
 `Custom font imports`
 
-// Color definitions
+// Color definitions - TODO: Only include colors that are used
 #define BLACK    0x0000
 #define BLUE     0x001F
 #define RED      0xF800
