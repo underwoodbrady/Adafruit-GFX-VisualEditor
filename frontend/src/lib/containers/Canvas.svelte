@@ -98,7 +98,8 @@
             case "line":
                 break;
             case "cursor":
-                break;
+                console.log(cellList[cellY][cellX]._object)
+                return;
             default:
         }
         if (newObject != undefined) objectList.push(newObject);
@@ -106,7 +107,7 @@
         console.log(newObject);
         mapObjectsToCells();
         drawCells();
-        console.log(cellList);
+        //console.log(cellList);
     };
 
     let mouseMove = (e: MouseEvent) => {

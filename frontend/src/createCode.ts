@@ -2,6 +2,13 @@ import codeFormat from "./codeFormat.txt";
 import codeONLYFormat from "./codeONLYFormat.txt";
 import type CanvasOb from "./classes/CanvasOb";
 
+
+//TODO: Make optimize function when shapes are fully overlapping
+let optimizeObjects = (objects: CanvasOb[]) => {
+
+}
+
+
 //TODO: Convert object.color to format arduino can understand
 let convertObjectsToCode = (object: CanvasOb): string => {
     let returnString: string = "";
@@ -15,9 +22,9 @@ let convertObjectsToCode = (object: CanvasOb): string => {
             break;
         case "rect":
             if (object.type == 'fill') {
-                returnString = `void fillRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
+                returnString = `lib.fillRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
             } else if (object.type = 'outline') {
-                returnString =`void drawRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
+                returnString =`lib.drawRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
             }
             break;
         case "triangle":

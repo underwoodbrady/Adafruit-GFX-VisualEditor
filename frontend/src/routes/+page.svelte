@@ -111,14 +111,14 @@
         "#",
     ];
 
-    let selectedTool: {name:string, image:string};
+    let selectedTool: { name: string; image: string };
     let selectedColor: HEX;
-    let selectedObject;
 
     let generateCode = () => {
-        createFullCode("", [""], [""], $objectListWritable).then((c)=>{
+        createFullCode("", [""], [""], $objectListWritable).then((c) => {
             code = c;
-        })}
+        });
+    };
 
     onMount(() => {
         selectedTool = tools[0];
@@ -133,7 +133,7 @@
 <Header choosenDisplay={`OLED ${canvasTrueWidth}x${canvasTrueHeight}`} />
 <main
     class="flex flex-col space-y-4 justify-center mt-[57px] pt-6 mx-auto"
-    style={`width:${canvasDisplayedWidth+4}px`}
+    style={`width:${canvasDisplayedWidth + 4}px`}
 >
     <section class="flex items-center space-x-4 place-self-end">
         <!--Settings-->
@@ -151,11 +151,23 @@
     <section class="relative">
         <div class="absolute -left-[104px] top-0 grid grid-cols-2 gap-4">
             <!--Color Panel-->
-            <ColorSelector {colors} {selectedColor} updateSelectedColor={(color)=>{selectedColor=color}} />
+            <ColorSelector
+                {colors}
+                {selectedColor}
+                updateSelectedColor={(color) => {
+                    selectedColor = color;
+                }}
+                updateColor={(color, index) => {
+                    colors[index] = color;
+                    selectedColor = color;
+                }}
+            />
         </div>
         <div
             class="relative bg-white border-2 border-neutral-900"
-            style={`width:${canvasDisplayedWidth+4}px;height:${canvasDisplayedHeight+4}px`}
+            style={`width:${canvasDisplayedWidth + 4}px;height:${
+                canvasDisplayedHeight + 4
+            }px`}
         >
             <!--Canvas-->
             <p
@@ -166,7 +178,13 @@
                     >({canvasDisplayedWidth}x{canvasDisplayedHeight})</span
                 >
             </p>
-            <Canvas {selectedColor} {selectedTool} {canvasDisplayedWidth} {canvasDisplayedHeight} {canvasScale}/>
+            <Canvas
+                {selectedColor}
+                {selectedTool}
+                {canvasDisplayedWidth}
+                {canvasDisplayedHeight}
+                {canvasScale}
+            />
         </div>
         <div
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
@@ -177,7 +195,13 @@
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">
         <!--Tools-->
-        <ToolSelector {tools} {selectedTool} updateSelectedTool={(tool)=>{selectedTool=tool}} />
+        <ToolSelector
+            {tools}
+            {selectedTool}
+            updateSelectedTool={(tool) => {
+                selectedTool = tool;
+            }}
+        />
     </section>
     {#if showCode}
         <section class="pt-6 flex-col space-y-4 pb-6">

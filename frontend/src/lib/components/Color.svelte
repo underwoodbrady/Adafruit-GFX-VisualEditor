@@ -1,8 +1,15 @@
 <script lang="ts">
+    type HEX = `#${string}`;
+
     export let color: string = "transparent";
     export let onClick: () => void;
     export let selected: boolean = false;
     export let openSlot: boolean = false;
+    export let onUpdateColor: (color:string)=>void;
+
+    let selectedColor: HTMLInputElement;
+
+    let colorSelected = () => onUpdateColor(selectedColor.value as HEX)
 </script>
 
 <button
@@ -11,6 +18,9 @@
     style={`background-color:${color}`}
 >
     {#if openSlot}
+    <div>
+        <input type="color" bind:this={selectedColor} class="absolute left-0 top-0 w-full h-full opacity-0" on:change={colorSelected}>
         <img src="/plus.svg" alt="Plus Icon" class="h-5"/>
+    </div>
     {/if}
 </button>
