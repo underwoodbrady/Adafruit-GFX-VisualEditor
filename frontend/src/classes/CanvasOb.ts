@@ -9,20 +9,16 @@ type HEX = `#${string}`;
 class CanvasOb{
     shape: shapes;
     type: shapeType;
-    x:number;
-    y:number;
-    w:number; 
-    h:number;
     color: HEX;
 
-    constructor(shape:shapes, type:shapeType, x:number, y:number, w:number, h:number, color: HEX){
+    constructor(shape:shapes, type:shapeType, color: HEX){
         this.shape = shape;
         this.type = type;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
         this.color = color;
+    }
+
+    printFormatted(){
+        //implement
     }
 }
 

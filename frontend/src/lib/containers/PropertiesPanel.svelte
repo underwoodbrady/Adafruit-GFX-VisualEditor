@@ -1,5 +1,6 @@
 <script lang="ts">
     import type CanvasOb from "../../classes/CanvasOb";
+    import { canvasRedraws } from "./objectList";
 
     export let selectedObject: CanvasOb;
     export let updateSelectedObject: (ob: CanvasOb) => void;
@@ -9,30 +10,42 @@
     type objectKeys = keyof CanvasOb;
 
     let selectedColor: HTMLInputElement;
-    
-    let checkCanvasBoundries = (x:number, y:number, w:number, h:number):boolean => {
-        if(x+w>= canvasTrueWidth || y+h >= canvasTrueHeight || x<0 || y<0 || w<0 || h<0){
-            alert(`The values given don't fit within the canvas`)
-            return false
+
+    let checkCanvasBoundries = (
+        x: number,
+        y: number,
+        w: number,
+        h: number
+    ): boolean => {
+        if (
+            x + w >= canvasTrueWidth ||
+            y + h >= canvasTrueHeight ||
+            x < 0 ||
+            y < 0 ||
+            w < 0 ||
+            h < 0
+        ) {
+            alert(`The values given don't fit within the canvas`);
+            return false;
         }
         return true;
-    }
-
-    //These functions are so ugly don't look... Honestly shocking they work as well as they do
-    let numberChanged = (change:any, key: objectKeys) => {
-        console.log((change.target as HTMLInputElement).value);
-        let so = selectedObject;
-        so[key] = Number((change.target as HTMLInputElement).value)
-        if(checkCanvasBoundries(so.x, so.y, so.w, so.h))
-            updateSelectedObject(so)
     };
 
-    let colorChanged = (change: any, key:objectKeys) =>{
+    //These functions are so ugly don't look... Honestly shocking they work
+    let numberChanged = (change: any, key: objectKeys) => {
+        console.log((change.target as HTMLInputElement).value);
+        let so = selectedObject;
+        so[key] = Number((change.target as HTMLInputElement).value); // I think this actually updates selected object on accident :(
+        if (checkCanvasBoundries(so.x, so.y, so.w, so.h))
+            canvasRedraws.set($canvasRedraws + 1);
+    };
+
+    let colorChanged = (change: any, key: objectKeys) => {
         console.log(change);
         let so = selectedObject;
         so[key] = change;
-        updateSelectedObject(so)
-    }
+        canvasRedraws.set($canvasRedraws + 1);
+    };
 </script>
 
 <div class="flex space-x-2 items-center">
@@ -44,20 +57,20 @@
     <div class="mt-4 text-sm flex-col space-y-2">
         {#each Object.keys(selectedObject) as key}
             {#if key == "shape" || key == "type"}
-                <span></span>
+                <span />
             {:else if key == "color"}
-                <p class="font-semibold w-5">
-                    {key}:
-                </p>
-                <input
-                    type="color"
-                    value={selectedObject[key]}
-                    class="bg-white border border-neutral-900 w-full"
-                    bind:this = {selectedColor}
-                    on:change={() => {
-                        colorChanged(selectedColor.value, key);
-                    }}
-                />
+                <div class="flex space-x-2">
+                    <p class="font-semibold w-5">c:</p>
+                    <input
+                        type="color"
+                        value={selectedObject.color}
+                        class="border border-neutral-900 w-full"
+                        bind:this={selectedColor}
+                        on:change={() => {
+                            colorChanged(selectedColor.value, 'color');
+                        }}
+                    />
+                </div>
             {:else}
                 <div class="flex space-x-2">
                     <p class="font-semibold w-5">
@@ -66,7 +79,7 @@
                     <input
                         type="number"
                         value={selectedObject[key]}
-                        class="bg-white border border-neutral-900 w-full"
+                        class="bg-neutral-300 border border-neutral-900 w-full text-right"
                         on:change={(change) => {
                             numberChanged(change, key);
                         }}

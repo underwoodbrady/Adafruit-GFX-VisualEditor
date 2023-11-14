@@ -1,8 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import CanvasOb from "../../classes/CanvasOb";
+    import type CanvasOb from "../../classes/CanvasOb";
     import Cell from "../../classes/Cell";
-    import { objectListWritable, selectedObject } from "./objectList";
+    import {
+        canvasRedraws,
+        objectListWritable,
+        selectedObject,
+    } from "./objectList";
+    import Rect from "../../classes/shapes/Rect";
+    import Circle from "../../classes/shapes/Circle";
 
     type HEX = `#${string}`;
 
@@ -54,6 +60,8 @@
         let cellWidth = Math.round((mouseX - startingMouseX) / canvasScale);
         let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
 
+        let widthHeightToRadius = Math.min(Math.max(Math.round(cellWidth / 2), Math.round(cellHeight/2))); //TODO: Add boundry checking to prevent overflow
+
         //Error checking
         if (
             cellX < 0 ||
@@ -69,8 +77,7 @@
 
         switch (selectedTool.name) {
             case "rect-open":
-                newObject = new CanvasOb(
-                    "rect",
+                newObject = new Rect(
                     "outline",
                     cellX,
                     cellY,
@@ -80,8 +87,7 @@
                 );
                 break;
             case "rect-closed":
-                newObject = new CanvasOb(
-                    "rect",
+                newObject = new Rect(
                     "fill",
                     cellX,
                     cellY,
@@ -95,8 +101,22 @@
             case "round-rect-closed":
                 break;
             case "circle-open":
+                newObject = new Circle(
+                    "outline",
+                    cellX + widthHeightToRadius,
+                    cellY + widthHeightToRadius,
+                    widthHeightToRadius,
+                    selectedColor
+                );
                 break;
             case "circle-closed":
+                newObject = new Circle(
+                    "fill",
+                    cellX + widthHeightToRadius,
+                    cellY + widthHeightToRadius,
+                    widthHeightToRadius,
+                    selectedColor
+                );
                 break;
             case "tri-open":
                 break;
@@ -163,10 +183,10 @@
                 cellNum++
             ) {
                 let cell = cellRow[cellNum];
-                cell.color = '#'
+                cell.color = "#";
             }
         }
-    }
+    };
 
     //Handle objects first, only call this if needed
     let drawCells = () => {
@@ -204,38 +224,10 @@
             let object = objectList[objectNum];
             switch (object.shape) {
                 case "circle":
+                    (object as Circle).drawCells(cellList); //This is probably scuffed
                     break;
                 case "rect":
-                    for (
-                        let cellRowNum: number = object.y,
-                            cellRowMax = object.y + object.h;
-                        cellRowNum < cellRowMax + 1;
-                        cellRowNum++
-                    ) {
-                        let cellRow = cellList[cellRowNum];
-                        for (
-                            let cellNum: number = object.x,
-                                cellNumMax: number = object.x + object.w;
-                            cellNum < cellNumMax + 1;
-                            cellNum++
-                        ) {
-                            let cell = cellRow[cellNum];
-                            if (object.type == "fill") {
-                                cell.color = object.color;
-                                cell.object = object;
-                                continue;
-                            } else if (
-                                object.type == "outline" &&
-                                (cellNum == object.x ||
-                                    cellRowNum == object.y ||
-                                    cellNum == cellNumMax ||
-                                    cellRowNum == cellRowMax)
-                            ) {
-                                cell.color = object.color;
-                                cell.object = object;
-                            }
-                        }
-                    }
+                    (object as Rect).drawCells(cellList); //This is probably scuffed
                     break;
                 case "triangle":
                     break;
@@ -273,8 +265,9 @@
 
         createCells();
 
-        selectedObject.subscribe(() => {
-            console.log("update")
+        selectedObject.subscribe(() => {});
+        canvasRedraws.subscribe(() => {
+            console.log("redraw");
             resetCells();
             mapObjectsToCells();
             drawCells();
