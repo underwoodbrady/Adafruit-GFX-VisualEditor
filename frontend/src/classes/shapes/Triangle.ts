@@ -13,7 +13,7 @@ class Triangle extends CanvasOb {
 
 
     constructor(type: shapeType, x1:number, y1:number, x2:number, y2:number, x3:number, y3:number, color: HEX) {
-        super("circle", type, color); //Can get rid of the x,y,w,h
+        super("triangle", type, color);
         this.x1 = x1;
         this.y1  =y1;
         this.x2 = x2;
@@ -35,8 +35,8 @@ class Triangle extends CanvasOb {
             return !(hasNeg && hasPos);
         }
 
-        let isPointOnLine = (pt:any, v1:any, v2:any) => {
-            const epsilon = 32; // Tolerance to account for floating point errors TODO: Fix this to not be stupid
+        let isPointOnLine = (pt:any, v1:any, v2:any) => { //TODO: Maybe just find point closest to each point on line
+            const epsilon = 32; // Tolerance to account for floating point errors - this might be stupid
             const d = sign(pt, v1, v2);
             if (Math.abs(d) > epsilon) return false; // Point is not on the line
         

@@ -18,8 +18,8 @@
     style={`background-color:${color}`}
 >
     {#if openSlot}
-    <div>
-        <input type="color" bind:this={selectedColor} class="absolute left-0 top-0 w-full h-full opacity-0" on:change={colorSelected}>
+    <div class="group-hover">
+        <input type="color" bind:this={selectedColor} class="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer" on:change={colorSelected}>
         <img src="/plus.svg" alt="Plus Icon" class="h-5"/>
     </div>
     {/if}

@@ -191,9 +191,7 @@
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
         >
             <!--Properties-->
-            <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} updateSelectedObject = {(ob)=>{
-                selectedObject.set(ob)
-            }} />
+            <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} />
         </div>
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">

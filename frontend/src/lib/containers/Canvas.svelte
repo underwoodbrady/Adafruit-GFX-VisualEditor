@@ -10,6 +10,7 @@
     import Rect from "../../classes/shapes/Rect";
     import Circle from "../../classes/shapes/Circle";
     import Triangle from "../../classes/shapes/Triangle";
+    import Dot from "../../classes/shapes/Dot";
 
     type HEX = `#${string}`;
 
@@ -36,7 +37,7 @@
         };
     };
 
-    let updateCanvasBoundingRect = () => {
+    let updateCanvasBoundingRect = (canvas: HTMLCanvasElement) => {
         canvasBoundingRect = canvas.getBoundingClientRect();
     };
 
@@ -47,8 +48,16 @@
         const { mouseX, mouseY } = getMousePositions(e);
         startingMouseX = mouseX;
         startingMouseY = mouseY;
-        canvas.onmousemove = (e) => mouseMove(e);
+        if (selectedTool.name == "paint-brush")
+            canvas.onmousemove = (e) => mouseMove(e);
     };
+
+    let addNewObject = (newObject:CanvasOb) =>{
+        objectList.push(newObject);
+        objectListWritable.set(objectList);
+        mapObjectToCells(newObject);
+        drawCells();
+    }
 
     let mouseUp = (e: MouseEvent) => {
         const { mouseX, mouseY } = getMousePositions(e);
@@ -61,7 +70,9 @@
         let cellWidth = Math.round((mouseX - startingMouseX) / canvasScale);
         let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
 
-        let widthHeightToRadius = Math.min(Math.max(Math.round(cellWidth / 2), Math.round(cellHeight/2))); //TODO: Add boundry checking to prevent overflow
+        let widthHeightToRadius = Math.min(
+            Math.max(Math.round(cellWidth / 2), Math.round(cellHeight / 2))
+        ); //TODO: Add boundry checking to prevent overflow
 
         //Error checking
         if (
@@ -121,26 +132,26 @@
                 break;
             case "tri-open":
                 newObject = new Triangle(
-                    "outline", 
-                cellX + Math.round(cellWidth/2),
-                cellY,
-                cellX,
-                cellY+ cellHeight,
-                cellX + cellWidth,
-                cellY +cellHeight,
-                selectedColor
+                    "outline",
+                    cellX + Math.round(cellWidth / 2),
+                    cellY,
+                    cellX,
+                    cellY + cellHeight,
+                    cellX + cellWidth,
+                    cellY + cellHeight,
+                    selectedColor
                 );
                 break;
             case "tri-closed":
-            newObject = new Triangle(
-                    "fill", 
-                cellX + Math.round(cellWidth/2),
-                cellY,
-                cellX,
-                cellY+ cellHeight,
-                cellX + cellWidth,
-                cellY +cellHeight,
-                selectedColor
+                newObject = new Triangle(
+                    "fill",
+                    cellX + Math.round(cellWidth / 2),
+                    cellY,
+                    cellX,
+                    cellY + cellHeight,
+                    cellX + cellWidth,
+                    cellY + cellHeight,
+                    selectedColor
                 );
                 break;
             case "line":
@@ -151,24 +162,19 @@
                 return;
             default:
         }
-        if (newObject != undefined) objectList.push(newObject);
-        objectListWritable.set(objectList);
-        console.log(newObject);
-        mapObjectsToCells();
-        drawCells();
-        //console.log(cellList);
+        if(newObject) addNewObject(newObject);
     };
 
-    //Only define this function if the tool is paint brush (before not during)
+    //Only define this function if the tool is paint brush
     let mouseMove = (e: MouseEvent) => {
         let { mouseX, mouseY } = getMousePositions(e);
-
-        if (selectedTool.name == "paint-brush") {
-            cellList[Math.round(mouseY / canvasScale)][
-                Math.round(mouseX / canvasScale)
-            ].color = selectedColor;
-            drawCells();
-        }
+        let newObject = new Dot( //TODO: Add interpolation?
+            "outline",
+            Math.round(mouseX / canvasScale),
+            Math.round(mouseY / canvasScale),
+            selectedColor
+        );
+        if(newObject) addNewObject(newObject);
     };
 
     //Should only call once
@@ -210,7 +216,8 @@
         }
     };
 
-    //Handle objects first, only call this if needed
+    //TODO: Can optimize further by only drawing over needed cells
+    //Handle objects first
     let drawCells = () => {
         ctx.clearRect(0, 0, canvasDisplayedWidth, canvasDisplayedHeight);
         ctx.fillStyle = "black";
@@ -236,7 +243,7 @@
         }
     };
 
-    let mapObjectsToCells = () => {
+    let mapAllObjectsToCells = () => {
         for (
             let objectNum: number = 0,
                 objectListLength: number = objectList.length;
@@ -244,29 +251,29 @@
             objectNum++
         ) {
             let object = objectList[objectNum];
-            switch (object.shape) {
-                case "circle":
-                    (object as Circle).drawCells(cellList); //This is probably scuffed
-                    break;
-                case "rect":
-                    (object as Rect).drawCells(cellList); //This is probably scuffed
-                    break;
-                case "triangle":
-                    (object as Triangle).drawCells(cellList); //This is probably scuffed
-                    break;
-                case "round-rect":
-                    break;
-                case "line":
-                    break;
-                case "dot":
-                    break;
-            }
+            mapObjectToCells(object);
         }
     };
 
     let mapObjectToCells = (object: CanvasOb) => {
-        //Map one object instead to prevent full redraw
-        //ONLY FULLY REDRAW IF Properties PANEL IS EDITED OR UNDO
+        switch (object.shape) {
+            case "circle":
+                (object as Circle).drawCells(cellList); //This is probably scuffed
+                break;
+            case "rect":
+                (object as Rect).drawCells(cellList); //This is probably scuffed
+                break;
+            case "triangle":
+                (object as Triangle).drawCells(cellList); //This is probably scuffed
+                break;
+            case "round-rect":
+                break;
+            case "line":
+                break;
+            case "dot":
+                (object as Dot).drawCells(cellList);
+                break;
+        }
     };
 
     onMount(() => {
@@ -281,18 +288,16 @@
         canvas.addEventListener("mouseup", (e) => mouseUp(e));
 
         window.addEventListener("resize", function () {
-            updateCanvasBoundingRect();
+            updateCanvasBoundingRect(canvas);
         });
-
-        updateCanvasBoundingRect();
+        updateCanvasBoundingRect(canvas);
 
         createCells();
 
-        selectedObject.subscribe(() => {});
         canvasRedraws.subscribe(() => {
             console.log("redraw");
             resetCells();
-            mapObjectsToCells();
+            mapAllObjectsToCells();
             drawCells();
         });
     });

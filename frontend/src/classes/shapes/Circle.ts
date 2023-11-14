@@ -9,7 +9,7 @@ class Circle extends CanvasOb {
     r: number; //Radius of Circle
 
     constructor(type: shapeType, x: number, y: number, r: number, color: HEX) {
-        super("circle", type, color); //Can get rid of the x,y,w,h
+        super("circle", type, color); 
         this.x = x;
         this.y = y;
         this.r = r;

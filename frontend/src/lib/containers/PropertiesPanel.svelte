@@ -3,7 +3,6 @@
     import { canvasRedraws } from "./objectList";
 
     export let selectedObject: CanvasOb;
-    export let updateSelectedObject: (ob: CanvasOb) => void;
     export let canvasTrueWidth: number;
     export let canvasTrueHeight: number;
 
@@ -48,46 +47,65 @@
     };
 </script>
 
-<div class="flex space-x-2 items-center">
-    <img src="/properties.svg" alt="Properties Icon" class="w-4" />
-    <p class="text-sm font-semibold mb-[2px]">Properties</p>
-</div>
-
-{#if selectedObject}
-    <div class="mt-4 text-sm flex-col space-y-2">
-        {#each Object.keys(selectedObject) as key}
-            {#if key == "shape" || key == "type"}
-                <span />
-            {:else if key == "color"}
-                <div class="flex space-x-2">
-                    <p class="font-semibold w-5">c:</p>
-                    <input
-                        type="color"
-                        value={selectedObject.color}
-                        class="border border-neutral-900 w-full"
-                        bind:this={selectedColor}
-                        on:change={() => {
-                            colorChanged(selectedColor.value, 'color');
-                        }}
-                    />
-                </div>
-            {:else}
-                <div class="flex space-x-2">
-                    <p class="font-semibold w-5">
-                        {key}:
-                    </p>
-                    <input
-                        type="number"
-                        value={selectedObject[key]}
-                        class="bg-neutral-300 border border-neutral-900 w-full text-right"
-                        on:change={(change) => {
-                            numberChanged(change, key);
-                        }}
-                    />
-                </div>
-            {/if}
-        {/each}
+<section class="flex flex-col space-y-2 h-full">
+    <div class="flex space-x-2 items-center">
+        <img src="/properties.svg" alt="Properties Icon" class="w-4" />
+        <p class="text-sm font-semibold">Properties</p>
     </div>
-{:else}
-    <p class="text-center text-neutral-700 mt-6 text-xs">Select Object</p>
-{/if}
+
+    {#if selectedObject}
+        <div class="mt-4 flex flex-col flex-1 justify-between">
+            <div class="text-sm flex-col space-y-2">
+                {#each Object.keys(selectedObject) as key}
+                    {#if key == "shape" || key == "type"}
+                        <span />
+                    {:else if key == "color"}
+                        <div class="flex space-x-2">
+                            <p class="font-semibold w-8">c:</p>
+                            <input
+                                type="color"
+                                value={selectedObject.color}
+                                class="w-full"
+                                bind:this={selectedColor}
+                                on:change={() => {
+                                    colorChanged(selectedColor.value, "color");
+                                }}
+                            />
+                        </div>
+                    {:else}
+                        <div class="flex space-x-2">
+                            <p class="font-semibold w-8">
+                                {key}:
+                            </p>
+                            <input
+                                type="number"
+                                value={selectedObject[key]}
+                                class="bg-neutral-300 w-full text-right"
+                                on:change={(change) => {
+                                    numberChanged(change, key);
+                                }}
+                            />
+                        </div>
+                    {/if}
+                {/each}
+            </div>
+            <div class="flex-col space-y-2">
+                <button
+                    class="w-full h-7 px-2 border-2 border-neutral-900 font-semibold text-xs flex space-x-2 items-center justify-center"
+                    >
+                    <img src="/delete.svg" alt="Delete Icon" class="h-3" />
+                    <p>Delete</p>
+                    </button>
+                <button
+                    class="w-full h-7 px-2 bg-neutral-900 text-white font-semibold text-xs flex space-x-2 items-center justify-center"
+                    >
+                    <img src="/copy-white.svg" alt="Delete Icon" class="h-3" />
+
+<p>Duplicate</p>
+                    </button>
+            </div>
+        </div>
+    {:else}
+        <p class="text-center text-neutral-700 pt-4 text-xs">Select Object With () Tool</p>
+    {/if}
+</section>
