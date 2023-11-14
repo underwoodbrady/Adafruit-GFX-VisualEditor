@@ -7,7 +7,6 @@
     export let selectedTool: tool;
     export let updateSelectedTool: (tool:tool)=>void;
 
-    let additionalInfo = ["paint-brush", "paint-bucket", "text"]
     let hasAdditionalInfo = (tool:tool) => tool.name == 'paint-brush' || tool.name == 'paint-bucket' || tool.name == 'text';
 
 </script>

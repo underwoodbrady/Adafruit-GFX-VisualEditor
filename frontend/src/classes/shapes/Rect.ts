@@ -14,4 +14,7 @@ class Rect extends CanvasOb{
         this.w = w;
         this.h = h;
     }
+    draw(){
+        //Implement
+    }
 }

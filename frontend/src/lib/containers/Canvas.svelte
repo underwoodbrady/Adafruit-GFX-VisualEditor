@@ -10,7 +10,7 @@
     export let selectedTool: { name: string; image: string };
     export let canvasDisplayedWidth: number;
     export let canvasDisplayedHeight: number;
-    export let canvasScale: number;    
+    export let canvasScale: number;
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D;
@@ -55,7 +55,14 @@
         let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
 
         //Error checking
-        if(cellX<0 || cellX>canvasDisplayedWidth || cellY<0 || cellY>canvasDisplayedHeight || cellX+cellWidth>canvasDisplayedWidth || cellY+cellHeight>canvasDisplayedHeight)
+        if (
+            cellX < 0 ||
+            cellX > canvasDisplayedWidth ||
+            cellY < 0 ||
+            cellY > canvasDisplayedHeight ||
+            cellX + cellWidth > canvasDisplayedWidth ||
+            cellY + cellHeight > canvasDisplayedHeight
+        )
             return;
 
         //TODO: Make sure its drawn top left to bottom right too
@@ -99,7 +106,7 @@
                 break;
             case "cursor":
                 let ob = cellList[cellY][cellX]._object;
-                if(!(ob == undefined)) selectedObject.set(ob)
+                if (!(ob == undefined)) selectedObject.set(ob);
                 return;
             default:
         }
@@ -122,6 +129,7 @@
         }
     };
 
+    //Should only call once
     let createCells = () => {
         for (
             let y: number = 0, i: number = canvasDisplayedHeight;
@@ -139,6 +147,26 @@
             cellList.push(cellRow);
         }
     };
+
+    //This is probably braindead but oh well
+    let resetCells = () => {
+        for (
+            let cellRowNum: number = 0,
+                cellListLength: number = cellList.length;
+            cellRowNum < cellListLength;
+            cellRowNum++
+        ) {
+            let cellRow = cellList[cellRowNum];
+            for (
+                let cellNum: number = 0, cellRowLength: number = cellRow.length;
+                cellNum < cellRowLength;
+                cellNum++
+            ) {
+                let cell = cellRow[cellNum];
+                cell.color = '#'
+            }
+        }
+    }
 
     //Handle objects first, only call this if needed
     let drawCells = () => {
@@ -221,10 +249,10 @@
         }
     };
 
-    let mapObjectToCells = (object: CanvasOb)=>{
+    let mapObjectToCells = (object: CanvasOb) => {
         //Map one object instead to prevent full redraw
-        //ONLY FULLY REDRAW IF PANEL IS EDITED OR UNDO
-    }
+        //ONLY FULLY REDRAW IF Properties PANEL IS EDITED OR UNDO
+    };
 
     onMount(() => {
         const res = canvas.getContext("2d");
@@ -244,6 +272,13 @@
         updateCanvasBoundingRect();
 
         createCells();
+
+        selectedObject.subscribe(() => {
+            console.log("update")
+            resetCells();
+            mapObjectsToCells();
+            drawCells();
+        });
     });
 </script>
 

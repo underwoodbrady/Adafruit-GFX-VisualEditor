@@ -6,13 +6,14 @@
     import Header from "$lib/containers/Header.svelte";
     import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
     import ToolSelector from "$lib/containers/ToolSelector.svelte";
-    import { objectListWritable } from "$lib/containers/objectList";
+    import { objectListWritable, selectedObject } from "$lib/containers/objectList";
     import { onMount } from "svelte";
 
     import Highlight, { LineNumbers } from "svelte-highlight";
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
     import { createFullCode } from "../createCode";
+    import CanvasOb from "../classes/CanvasOb";
 
     let canvasTrueWidth: number = 320;
     let canvasTrueHeight: number = 170;
@@ -190,7 +191,9 @@
             class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
         >
             <!--Properties-->
-            <PropertiesPanel />
+            <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} updateSelectedObject = {(ob)=>{
+                selectedObject.set(ob)
+            }} />
         </div>
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">
