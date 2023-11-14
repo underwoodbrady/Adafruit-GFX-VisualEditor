@@ -9,6 +9,7 @@
     } from "./objectList";
     import Rect from "../../classes/shapes/Rect";
     import Circle from "../../classes/shapes/Circle";
+    import Triangle from "../../classes/shapes/Triangle";
 
     type HEX = `#${string}`;
 
@@ -119,8 +120,28 @@
                 );
                 break;
             case "tri-open":
+                newObject = new Triangle(
+                    "outline", 
+                cellX + Math.round(cellWidth/2),
+                cellY,
+                cellX,
+                cellY+ cellHeight,
+                cellX + cellWidth,
+                cellY +cellHeight,
+                selectedColor
+                );
                 break;
             case "tri-closed":
+            newObject = new Triangle(
+                    "fill", 
+                cellX + Math.round(cellWidth/2),
+                cellY,
+                cellX,
+                cellY+ cellHeight,
+                cellX + cellWidth,
+                cellY +cellHeight,
+                selectedColor
+                );
                 break;
             case "line":
                 break;
@@ -138,6 +159,7 @@
         //console.log(cellList);
     };
 
+    //Only define this function if the tool is paint brush (before not during)
     let mouseMove = (e: MouseEvent) => {
         let { mouseX, mouseY } = getMousePositions(e);
 
@@ -230,6 +252,7 @@
                     (object as Rect).drawCells(cellList); //This is probably scuffed
                     break;
                 case "triangle":
+                    (object as Triangle).drawCells(cellList); //This is probably scuffed
                     break;
                 case "round-rect":
                     break;

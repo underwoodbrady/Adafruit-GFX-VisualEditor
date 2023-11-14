@@ -1,6 +1,8 @@
 import codeFormat from "./codeFormat.txt";
 import codeONLYFormat from "./codeONLYFormat.txt";
 import type CanvasOb from "./classes/CanvasOb";
+import type Rect from "./classes/shapes/Rect";
+import type Circle from "./classes/shapes/Circle";
 
 
 //TODO: Make optimize function when shapes are fully overlapping
@@ -12,19 +14,22 @@ let optimizeObjects = (objects: CanvasOb[]) => {
 //TODO: Convert object.color to format arduino can understand
 let convertObjectsToCode = (object: CanvasOb): string => {
     let returnString: string = "";
+    let obj;
     switch (object.shape) {
         case "circle":
+            obj = (object as Circle); //Probably bad practice
             if (object.type == 'fill') {
-                returnString = `void fillCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);`
+                returnString = `lib.fillCircle(${obj.x}, ${obj.y}, ${obj.r}, '${obj.color}');`
             } else if (object.type = 'outline') {
-                returnString =`void drawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint16_t color);`
+                returnString =`lib.drawCircle(${obj.x}, ${obj.y}, ${obj.r}, '${obj.color}');`
             }
             break;
         case "rect":
-            if (object.type == 'fill') {
-                returnString = `lib.fillRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
-            } else if (object.type = 'outline') {
-                returnString =`lib.drawRect(${object.x}, ${object.y}, ${object.w}, ${object.h}, '${object.color}');`
+            obj = (object as Rect); //Probably bad practice
+            if (obj.type == 'fill') {
+                returnString = `lib.fillRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, '${obj.color}');`
+            } else if (obj.type = 'outline') {
+                returnString =`lib.drawRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, '${obj.color}');`
             }
             break;
         case "triangle":

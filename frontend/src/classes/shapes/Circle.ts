@@ -4,9 +4,9 @@ type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 
 class Circle extends CanvasOb {
-    x: number;
-    y: number;
-    r: number;
+    x: number; //X Position on display (from the middle)
+    y: number; //Y Position on display (from the middle)
+    r: number; //Radius of Circle
 
     constructor(type: shapeType, x: number, y: number, r: number, color: HEX) {
         super("circle", type, color); //Can get rid of the x,y,w,h
