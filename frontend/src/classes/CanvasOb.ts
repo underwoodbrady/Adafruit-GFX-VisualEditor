@@ -1,4 +1,4 @@
-type shapes = 'circle' | 'rect' | 'triangle' | 'round-rect' | 'line' | 'dot';
+type shapes = 'circle' | 'rect' | 'triangle' | 'round-rect' | 'line' | 'dot' | 'h-line' | 'v-line';
 type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 

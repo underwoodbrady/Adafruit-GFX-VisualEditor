@@ -11,6 +11,7 @@
     import Circle from "../../classes/shapes/Circle";
     import Triangle from "../../classes/shapes/Triangle";
     import Dot from "../../classes/shapes/Dot";
+    import Line from "../../classes/shapes/Line";
 
     type HEX = `#${string}`;
 
@@ -155,6 +156,14 @@
                 );
                 break;
             case "line":
+            newObject = new Line(
+                    "outline",
+                    cellX,
+                    cellY,
+                    cellX+cellWidth,
+                    cellY+cellHeight,
+                    selectedColor
+                );
                 break;
             case "cursor":
                 let ob = cellList[cellY][cellX]._object;
@@ -269,6 +278,7 @@
             case "round-rect":
                 break;
             case "line":
+                (object as Line).drawCells(cellList);
                 break;
             case "dot":
                 (object as Dot).drawCells(cellList);
