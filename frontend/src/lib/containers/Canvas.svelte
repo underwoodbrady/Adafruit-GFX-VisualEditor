@@ -12,6 +12,7 @@
     import Triangle from "../../classes/shapes/Triangle";
     import Dot from "../../classes/shapes/Dot";
     import Line from "../../classes/shapes/Line";
+    import Text from "../../classes/shapes/Text";
 
     type HEX = `#${string}`;
 
@@ -169,6 +170,10 @@
                 let ob = cellList[cellY][cellX]._object;
                 if (!(ob == undefined)) selectedObject.set(ob);
                 return;
+            case "text":
+                newObject = new Text(cellX, cellY, "", selectedColor);
+                selectedObject.set(newObject);
+                break;
             default:
         }
         if(newObject) addNewObject(newObject);
@@ -282,6 +287,9 @@
                 break;
             case "dot":
                 (object as Dot).drawCells(cellList);
+                break;
+            case "text":
+                (object as Text).drawCells(cellList);
                 break;
         }
     };

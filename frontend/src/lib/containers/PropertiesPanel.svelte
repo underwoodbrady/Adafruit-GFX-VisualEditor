@@ -34,9 +34,16 @@
     let numberChanged = (change: any, key: objectKeys) => {
         console.log((change.target as HTMLInputElement).value);
         let so = selectedObject;
-        so[key] = Number((change.target as HTMLInputElement).value); // I think this actually updates selected object on accident :(
+        so[key] = Number((change.target as HTMLInputElement).value);
         if (checkCanvasBoundries(so.x, so.y, so.w, so.h))
             canvasRedraws.set($canvasRedraws + 1);
+    };
+
+    let stringChanged = (change: any, key: objectKeys) => {
+        console.log((change.target as HTMLInputElement).value);
+        let so = selectedObject;
+        so[key] = String((change.target as HTMLInputElement).value);
+        canvasRedraws.set($canvasRedraws + 1);
     };
 
     let colorChanged = (change: any, key: objectKeys) => {
@@ -72,6 +79,20 @@
                                 }}
                             />
                         </div>
+                    {:else if key == "text"}
+                        <div class="flex space-x-2">
+                            <p class="font-semibold w-8">
+                                {key}:
+                            </p>
+                            <input
+                                type="text"
+                                value={selectedObject[key]}
+                                class="bg-neutral-300 w-full text-right"
+                                on:change={(change) => {
+                                    stringChanged(change, key);
+                                }}
+                            />
+                        </div>
                     {:else}
                         <div class="flex space-x-2">
                             <p class="font-semibold w-8">
@@ -92,20 +113,22 @@
             <div class="flex-col space-y-2">
                 <button
                     class="w-full h-7 px-2 border-2 border-neutral-900 font-semibold text-xs flex space-x-2 items-center justify-center"
-                    >
+                >
                     <img src="/delete.svg" alt="Delete Icon" class="h-3" />
                     <p>Delete</p>
-                    </button>
+                </button>
                 <button
                     class="w-full h-7 px-2 bg-neutral-900 text-white font-semibold text-xs flex space-x-2 items-center justify-center"
-                    >
+                >
                     <img src="/copy-white.svg" alt="Delete Icon" class="h-3" />
 
-<p>Duplicate</p>
-                    </button>
+                    <p>Duplicate</p>
+                </button>
             </div>
         </div>
     {:else}
-        <p class="text-center text-neutral-700 pt-4 text-xs">Select Object With () Tool</p>
+        <p class="text-center text-neutral-700 pt-4 text-xs">
+            Select Object With () Tool
+        </p>
     {/if}
 </section>
