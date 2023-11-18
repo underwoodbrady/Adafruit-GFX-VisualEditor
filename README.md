@@ -5,7 +5,7 @@
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chartjs/Chart.js/ci.yml?branch=master&style=flat-square">
 </p>
 
-<h1 align="center">Graphics to Code Editor for Adafruit GFX</h1>
+<h1 align="center">Streamline Your Adafruit GFX Projects with Visual Code Generation</h1>
 
 Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into Arduino code compatible with most microcontrollers and displays. 
 
@@ -13,14 +13,14 @@ It is available [online for free](https://pocket.montana.icu/auth/register) or y
 
 ## Compatibility
 
-Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library (given there is enough memory).
-
-Most displays should work but tested compatibility is listed below:
+Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library _(given there is enough memory)_
 
 | Displays  | Compatibility |
 | ---- | ---- |
 | TBD  | ✅  |
 | TBD  | ❌  |
+
+If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work you just need to fill out the dimensions and name of the library manually.
 
 ## Features
 
