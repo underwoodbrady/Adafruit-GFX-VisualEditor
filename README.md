@@ -13,7 +13,7 @@ It is available [online for free](https://pocket.montana.icu/auth/register) or y
 
 ## Compatibility
 
-Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library _(given there is enough memory)_
+Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library.
 
 | Displays  | Compatibility |
 | ---- | ---- |
