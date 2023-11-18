@@ -5,7 +5,7 @@
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chartjs/Chart.js/ci.yml?branch=master&style=flat-square">
 </p>
 
-<h1 align="center">Turn Graphics into Arduino Sketches</h1>
+<h1 align="center">Graphics to Arduino Sketches, instantly</h1>
 
 Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into Arduino code compatible with most microcontrollers and displays. 
 
