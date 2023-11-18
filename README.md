@@ -41,6 +41,8 @@ If you don't see the display you are using above, but there is a Adafruit GFX li
 
 Rust backend is currently not needed for the project to run locally.
 
+For the frontend you must have nodejs+npm installed on your computer.
+
 ### Backend (Rust)
 
 ```bash
@@ -52,6 +54,7 @@ cargo run
 
 ```bash
 cd frontend
+npm install
 npm run dev -- --open 
 ```
 ## Known Issues
