@@ -17,6 +17,7 @@ class Rect extends CanvasOb {
         this.h = h;
     }
 
+    //TODO: Get rid of the +1 across multiple classes
     drawCells(cellList: Cell[][]) {
         for (
             let cellRowNum: number = this.y,

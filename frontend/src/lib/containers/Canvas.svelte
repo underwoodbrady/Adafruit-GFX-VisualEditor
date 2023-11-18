@@ -13,6 +13,7 @@
     import Dot from "../../classes/shapes/Dot";
     import Line from "../../classes/shapes/Line";
     import Text from "../../classes/shapes/Text";
+    import RoundRect from "../../classes/shapes/RoundRect";
 
     type HEX = `#${string}`;
 
@@ -111,8 +112,26 @@
                 );
                 break;
             case "round-rect-open":
+                newObject = new RoundRect(
+                    "outline",
+                    cellX,
+                    cellY,
+                    cellWidth,
+                    cellHeight,
+                    Math.round(Math.min(cellWidth,cellHeight)/8),
+                    selectedColor
+                );
                 break;
             case "round-rect-closed":
+                newObject = new RoundRect(
+                    "fill",
+                    cellX,
+                    cellY,
+                    cellWidth,
+                    cellHeight,
+                    Math.round(Math.min(cellWidth,cellHeight)/8),
+                    selectedColor
+                );
                 break;
             case "circle-open":
                 newObject = new Circle(
@@ -276,12 +295,13 @@
                 (object as Circle).drawCells(cellList); //This is probably scuffed
                 break;
             case "rect":
-                (object as Rect).drawCells(cellList); //This is probably scuffed
+                (object as Rect).drawCells(cellList);
                 break;
             case "triangle":
-                (object as Triangle).drawCells(cellList); //This is probably scuffed
+                (object as Triangle).drawCells(cellList);
                 break;
             case "round-rect":
+                (object as RoundRect).drawCells(cellList);
                 break;
             case "line":
                 (object as Line).drawCells(cellList);
@@ -326,7 +346,7 @@
         });
 
         objectListWritable.subscribe((objList) => {
-            if (objList == objectList) return
+            if (objList == objectList) return;
             objectList = objList;
             selectedObject.set(undefined);
             fullRedraw();
