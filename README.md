@@ -9,7 +9,7 @@
 
 Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into Arduino code compatible with most microcontrollers and displays. 
 
-It is available [online for free](https://pocket.montana.icu/auth/register) or you can run on your own computer using the steps in Local Setup. If not listed below in "Known Issues" please [report bugs](https://google.com) or [leave a suggestion](here) in github.
+It is available [online for free](https://pocket.montana.icu/auth/register) or you can run on your own computer using the steps in Local Setup. If not listed below in Known Issues please [report bugs](https://google.com) or [leave a suggestion](here) in github.
 
 ## Compatibility
 
