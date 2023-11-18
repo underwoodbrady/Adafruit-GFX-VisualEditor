@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { afterUpdate } from "svelte";
     import type CanvasOb from "../../classes/CanvasOb";
-    import { canvasRedraws } from "./objectList";
+    import { canvasRedraws, objectListWritable } from "./objectList";
+    import type Text from "../../classes/shapes/Text";
 
-    export let selectedObject: CanvasOb;
+    export let selectedObject: CanvasOb | undefined;
     export let canvasTrueWidth: number;
     export let canvasTrueHeight: number;
 
@@ -10,6 +12,9 @@
 
     let selectedColor: HTMLInputElement;
 
+    let textInput: HTMLInputElement;
+
+    //TODO: Make this actually work
     let checkCanvasBoundries = (
         x: number,
         y: number,
@@ -36,25 +41,46 @@
         let so = selectedObject;
         so[key] = Number((change.target as HTMLInputElement).value);
         if (checkCanvasBoundries(so.x, so.y, so.w, so.h))
-            canvasRedraws.set($canvasRedraws + 1);
+            canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
     };
 
     let stringChanged = (change: any, key: objectKeys) => {
         console.log((change.target as HTMLInputElement).value);
         let so = selectedObject;
         so[key] = String((change.target as HTMLInputElement).value);
-        canvasRedraws.set($canvasRedraws + 1);
+        canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
     };
 
     let colorChanged = (change: any, key: objectKeys) => {
         console.log(change);
         let so = selectedObject;
         so[key] = change;
-        canvasRedraws.set($canvasRedraws + 1);
+        canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
     };
+
+    let deleteObject = ()=>{
+       objectListWritable.update((currentVal)=>currentVal.filter((object)=>object!=selectedObject))
+    }
+
+    let duplicateObject = ()=>{
+        alert("Feature coming soon...")
+        //TODO: Implement, this is harder than I thought it would be
+        // if(selectedObject == undefined) return
+        // let newObjList = $objectListWritable;
+        // objectListWritable.set(newObjList);
+    }
+
+    afterUpdate(() => {
+        if (selectedObject) {
+            if (selectedObject.shape == "text") {
+                textInput.value = (selectedObject as Text).text;
+                textInput.focus();
+            }
+        }
+    });
 </script>
 
-<section class="flex flex-col space-y-2 h-full">
+<section class="flex flex-col space-y-2 min-h-full">
     <div class="flex space-x-2 items-center">
         <img src="/properties.svg" alt="Properties Icon" class="w-4" />
         <p class="text-sm font-semibold">Properties</p>
@@ -68,11 +94,11 @@
                         <span />
                     {:else if key == "color"}
                         <div class="flex space-x-2">
-                            <p class="font-semibold w-8">c:</p>
+                            <p class="font-semibold w-16">c:</p>
                             <input
                                 type="color"
                                 value={selectedObject.color}
-                                class="w-full"
+                                class="w-full h-[20px]"
                                 bind:this={selectedColor}
                                 on:change={() => {
                                     colorChanged(selectedColor.value, "color");
@@ -81,21 +107,38 @@
                         </div>
                     {:else if key == "text"}
                         <div class="flex space-x-2">
-                            <p class="font-semibold w-8">
+                            <p class="font-semibold w-16">
                                 {key}:
                             </p>
                             <input
                                 type="text"
                                 value={selectedObject[key]}
+                                bind:this={textInput}
                                 class="bg-neutral-300 w-full text-right"
                                 on:change={(change) => {
                                     stringChanged(change, key);
                                 }}
                             />
                         </div>
+                    {:else if key == "scale"}
+                        <div class="flex space-x-2">
+                            <p class="font-semibold w-16">
+                                {key}:
+                            </p>
+                            <input
+                                type="number"
+                                min="0"
+                                max="2"
+                                value={selectedObject[key]}
+                                class="bg-neutral-300 w-full text-right"
+                                on:change={(change) => {
+                                    numberChanged(change, key);
+                                }}
+                            />
+                        </div>
                     {:else}
                         <div class="flex space-x-2">
-                            <p class="font-semibold w-8">
+                            <p class="font-semibold w-16">
                                 {key}:
                             </p>
                             <input
@@ -110,15 +153,17 @@
                     {/if}
                 {/each}
             </div>
-            <div class="flex-col space-y-2">
+            <div class="flex-col space-y-2 mt-4">
                 <button
                     class="w-full h-7 px-2 border-2 border-neutral-900 font-semibold text-xs flex space-x-2 items-center justify-center"
+                    on:click={deleteObject}
                 >
                     <img src="/delete.svg" alt="Delete Icon" class="h-3" />
                     <p>Delete</p>
                 </button>
                 <button
                     class="w-full h-7 px-2 bg-neutral-900 text-white font-semibold text-xs flex space-x-2 items-center justify-center"
+                    on:click={duplicateObject}
                 >
                     <img src="/copy-white.svg" alt="Delete Icon" class="h-3" />
 

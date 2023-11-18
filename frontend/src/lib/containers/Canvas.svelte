@@ -54,12 +54,12 @@
             canvas.onmousemove = (e) => mouseMove(e);
     };
 
-    let addNewObject = (newObject:CanvasOb) =>{
+    let addNewObject = (newObject: CanvasOb) => {
         objectList.push(newObject);
         objectListWritable.set(objectList);
         mapObjectToCells(newObject);
         drawCells();
-    }
+    };
 
     let mouseUp = (e: MouseEvent) => {
         const { mouseX, mouseY } = getMousePositions(e);
@@ -157,12 +157,12 @@
                 );
                 break;
             case "line":
-            newObject = new Line(
+                newObject = new Line(
                     "outline",
                     cellX,
                     cellY,
-                    cellX+cellWidth,
-                    cellY+cellHeight,
+                    cellX + cellWidth,
+                    cellY + cellHeight,
                     selectedColor
                 );
                 break;
@@ -171,12 +171,12 @@
                 if (!(ob == undefined)) selectedObject.set(ob);
                 return;
             case "text":
-                newObject = new Text(cellX, cellY, "", selectedColor);
+                newObject = new Text(cellX, cellY, "", selectedColor, 1);
                 selectedObject.set(newObject);
                 break;
             default:
         }
-        if(newObject) addNewObject(newObject);
+        if (newObject) addNewObject(newObject);
     };
 
     //Only define this function if the tool is paint brush
@@ -188,7 +188,7 @@
             Math.round(mouseY / canvasScale),
             selectedColor
         );
-        if(newObject) addNewObject(newObject);
+        if (newObject) addNewObject(newObject);
     };
 
     //Should only call once
@@ -226,6 +226,7 @@
             ) {
                 let cell = cellRow[cellNum];
                 cell.color = "#";
+                cell._object = undefined;
             }
         }
     };
@@ -294,6 +295,14 @@
         }
     };
 
+    //Fully redraws canvas
+    let fullRedraw = () => {
+        console.log("redraw");
+        resetCells();
+        mapAllObjectsToCells();
+        drawCells();
+    };
+
     onMount(() => {
         const res = canvas.getContext("2d");
         if (!res) return;
@@ -313,10 +322,14 @@
         createCells();
 
         canvasRedraws.subscribe(() => {
-            console.log("redraw");
-            resetCells();
-            mapAllObjectsToCells();
-            drawCells();
+            fullRedraw();
+        });
+
+        objectListWritable.subscribe((objList) => {
+            if (objList == objectList) return
+            objectList = objList;
+            selectedObject.set(undefined);
+            fullRedraw();
         });
     });
 </script>

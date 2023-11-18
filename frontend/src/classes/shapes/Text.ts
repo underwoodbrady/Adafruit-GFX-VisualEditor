@@ -1,8 +1,3 @@
-/**
-Gotta add a bitmap converter
-
-**/
-
 import CanvasOb from "../CanvasOb";
 import type Cell from "../Cell";
 type HEX = `#${string}`;
@@ -83,6 +78,7 @@ let defaultFontBitmap = [
     0x44, 0x28, 0x10, 0x28, 0x44,
     0x4C, 0x90, 0x90, 0x90, 0x7C,
     0x44, 0x64, 0x54, 0x4C, 0x44,
+    0x00, 0x00, 0x00, 0x00, 0x00,
 ];
 
 let mapCharToIndex:any = {
@@ -160,7 +156,8 @@ let mapCharToIndex:any = {
     'w': 355,
     'x': 360,
     'y': 365,
-    'z': 370
+    'z': 370,
+    ' ': 375,
 }
 
 let allowedChars = Object.keys(mapCharToIndex);
@@ -169,40 +166,61 @@ class Text extends CanvasOb {
     x: number; //X Position on display 
     y: number; //Y Position on display 
     text: string;
+    scale: number;
 
-    constructor(x: number, y: number, text: string = "", color: HEX) {
+    constructor(x: number, y: number, text: string = "", color: HEX,  scale:number = 1) {
         super("text", 'fill', color);
         this.x = x;
         this.y = y;
         this.text = text;
+        this.scale = scale;
     }
 
+    //Optimize this function with help of original Adafruit code 
+    //TODO: Fix scales for greater than 2
     drawCells(cellList: Cell[][]) {
         if (this.text.length == 0) return
         this.text = this.text.split("").filter((char) => allowedChars.indexOf(char) > -1).join(""); //Filter text to only allowed characters TODO:Do on frontend as well
+
         const startingX = this.x,
               startingY = this.y;
+
+        const fontWidth = 5 *this.scale;
+        const fontHeight = 7 *this.scale;
 
         let currentX = startingX,
             currentY = startingY;
 
         let currentChar;
-        let currentBitmap;
+        let currentLetter;
+        let scaleBitmap;
         for (let i = 0, textLen = this.text.length; i < textLen; i++) {
-            currentX = i *5 + startingX;
+            currentX = i * fontWidth + startingX;
             currentY = startingY;
             currentChar = this.text[i];
             let bitMapLocation = mapCharToIndex[currentChar];
-            for(let x=currentX; x<currentX+5; x++){
-                //console.log(bitMapLocation, x)
-                currentBitmap =('0000000' + defaultFontBitmap[bitMapLocation+x-currentX].toString(2)).substr(-7).split("")
-                //console.log(currentBitmap)
-                for(let y=currentY; y<currentY+7; y++){
-                    console.log(currentBitmap, currentBitmap[y-currentY],y-currentY)
-                    if(currentBitmap[6-(y-currentY)] == '1')
+            let letterCount = 0; //TODO: Can remove
+            for(let x=currentX; x<currentX+fontWidth; x+=this.scale){
+                currentLetter =(('0000000' + defaultFontBitmap[(bitMapLocation+letterCount)].toString(2)).substr(-7)).split("")
+                letterCount++;
+                let heightCount = 0; //TODO: Can remove
+                for(let y=currentY; y<currentY+fontHeight; y+=this.scale){
+                    if(currentLetter[6-heightCount] == '1')
                     {
-                        cellList[y][x].color = "#fff";
+                        for(let scaleX =0; scaleX<this.scale; scaleX++){
+                            cellList[y][x+scaleX].color = this.color;
+                            cellList[y][x+scaleX]._object = this;
+                        }
+                        for(let scaleY =0; scaleY<this.scale; scaleY++){
+                            cellList[y+scaleY][x].color = this.color;
+                            cellList[y+scaleY][x]._object = this;
+                        }
+                        for(let diag =0; diag<this.scale; diag++){
+                            cellList[y+diag][x+diag].color = this.color;
+                            cellList[y+diag][x+diag]._object = this;
+                        }
                     }
+                    heightCount++;
                 }
             }
 

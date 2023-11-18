@@ -1,11 +1,4 @@
-// /**
-// Gotta add a bitmap converter
 
-// **/
-
-// //import CanvasOb from "../CanvasOb";
-// //import type Cell from "../Cell";
-// //type HEX = `#${string}`;
 
 // let defaultFontBitmap = [
 //     0x3E, 0x51, 0x49, 0x45, 0x3E, 
@@ -205,23 +198,3 @@
 
 // bitLineToText();
 // /*
-// class Text extends CanvasOb {
-//     x: number; //X Position on display 
-//     y: number; //Y Position on display 
-//     text: string;
-
-//     constructor(x: number, y: number, text: string, color: HEX) {
-//         super("text", 'fill', color);
-//         this.x = x;
-//         this.y = y;
-//         this.text = text;
-//     }
-
-//     drawCells(cellList: Cell[][]) {
-//         //Bitmap converter used here
-        
-//     }
-// }
-
-
-// export default Text;*/

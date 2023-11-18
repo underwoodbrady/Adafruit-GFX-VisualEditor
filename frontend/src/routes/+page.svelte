@@ -13,7 +13,6 @@
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
     import { createFullCode } from "../createCode";
-    import CanvasOb from "../classes/CanvasOb";
 
     let canvasTrueWidth: number = 320;
     let canvasTrueHeight: number = 170;
@@ -140,7 +139,7 @@
         <!--Settings-->
 
         <IconButton icon="/undo.svg" onClick={() => {}} />
-        <TextButton icon="/delete.svg" text="Clear" onClick={() => {}} />
+        <TextButton icon="/delete.svg" text="Clear" onClick={() => {objectListWritable.set([])}} />
         <IconButton icon="/gear.svg" onClick={() => {}} filled />
         <TextButton
             icon="/code.svg"
@@ -172,7 +171,7 @@
         >
             <!--Canvas-->
             <p
-                class="absolute -top-6 left-0 text-sm font-bold text-neutral-900"
+                class="absolute -top-5 left-0 text-xs font-bold text-neutral-900"
             >
                 {canvasTrueWidth}x{canvasTrueHeight}
                 <span class="font-semibold"
@@ -188,7 +187,7 @@
             />
         </div>
         <div
-            class="absolute -right-40 top-0 w-36 h-full bg-neutral-400 border-2 border-black p-4"
+            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-400 border-2 border-black p-4 flex"
         >
             <!--Properties-->
             <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} />
