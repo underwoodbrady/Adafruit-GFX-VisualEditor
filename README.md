@@ -1,8 +1,15 @@
 ![Visual Editor Logo](https://i.imgur.com/VhjikA2.png)
 
-## Usage
+<p align="center">
+    <a href="https://www.chartjs.org/docs/latest/getting-started/installation.html"><img src="https://img.shields.io/github/release/chartjs/Chart.js.svg?style=flat-square&maxAge=600" alt="Downloads"></a>
+    <a href="https://github.com/chartjs/Chart.js/actions?query=workflow%3ACI+branch%3Amaster"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chartjs/Chart.js/ci.yml?branch=master&style=flat-square"></a>
+</p>
 
-Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into C++ code compatible with most microcontrollers and displays. Try it [here](https://pocket.montana.icu/auth/register)
+<h1 align="center">Graphics to Code Editor for Adafruit GFX</h1>
+
+Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into Arduino code compatible with most microcontrollers and displays. 
+
+It is available online for free [here](https://pocket.montana.icu/auth/register) or you can run on your own computer using steps outlined in Local Setup. 
 
 ## Compatibility
 
