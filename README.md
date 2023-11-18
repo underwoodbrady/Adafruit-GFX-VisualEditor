@@ -1,4 +1,4 @@
-![Visual Editor Logo](https://i.imgur.com/VhjikA2.png)
+![Visual Editor Logo](https://i.imgur.com/4x2mvKa.png)
 
 <p align="center">
   <img src="https://img.shields.io/github/release/chartjs/Chart.js.svg?style=flat-square&maxAge=600" alt="Downloads">
