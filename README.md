@@ -20,7 +20,7 @@ Any microcontroller than can run Arduino code should be compatible with Adafruit
 | TBD  | ✅  |
 | TBD  | ❌  |
 
-If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You just need to fill out the dimensions and name of the library manually.
+If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You will just need to fill out the dimensions and name of the library manually.
 
 ## Features
 
