@@ -23,7 +23,7 @@
     let canvasDisplayedWidth: number = canvasTrueWidth * canvasScale;
     let canvasDisplayedHeight: number = canvasTrueHeight * canvasScale;
 
-    let showCode: boolean = true;
+    let showCode: boolean = false;
     type generatingStages =
         | "Generating"
         | "Optimizing"
@@ -36,7 +36,7 @@
         "Compiling",
         "Done",
     ];
-    let currentStage: generatingStages = allHappyPathStages[3];
+    let currentStage: generatingStages = allHappyPathStages[0];
     let code: string = ``;
 
     let tools = [

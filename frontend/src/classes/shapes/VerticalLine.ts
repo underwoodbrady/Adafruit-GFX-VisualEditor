@@ -3,7 +3,7 @@ import type Cell from "../Cell";
 type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 
-class HorizontalLine extends CanvasOb {
+class VerticalLine extends CanvasOb {
     x: number; //X Position on display 
     y: number; //Y Position on display 
     l: number;
@@ -25,4 +25,4 @@ class HorizontalLine extends CanvasOb {
 }
 
 
-export default HorizontalLine;
+export default VerticalLine;
