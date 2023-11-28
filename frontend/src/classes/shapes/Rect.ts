@@ -19,35 +19,33 @@ class Rect extends CanvasOb {
 
     //TODO: Get rid of the +1 across multiple classes
     drawCells(cellList: Cell[][]) {
-        for (
-            let cellRowNum: number = this.y,
-            cellRowMax = this.y + this.h;
-            cellRowNum < cellRowMax + 1;
-            cellRowNum++
-        ) {
-            let cellRow = cellList[cellRowNum];
+        if (this.type == 'fill') {
             for (
-                let cellNum: number = this.x,
-                cellNumMax: number = this.x + this.w;
-                cellNum < cellNumMax + 1;
-                cellNum++
+                let cellRowNum: number = this.y,
+                cellRowMax = this.y + this.h;
+                cellRowNum < cellRowMax + 1;
+                cellRowNum++
             ) {
-                let cell = cellRow[cellNum];
-                if (this.type == "fill") {
-                    cell.color = this.color;
-                    cell.object = this;
-                } else if (
-                    this.type == "outline" &&
-                    (cellNum == this.x ||
-                        cellRowNum == this.y ||
-                        cellNum == cellNumMax ||
-                        cellRowNum == cellRowMax)
+                let cellRow = cellList[cellRowNum];
+                for (
+                    let cellNum: number = this.x,
+                    cellNumMax: number = this.x + this.w;
+                    cellNum < cellNumMax + 1;
+                    cellNum++
                 ) {
+                    let cell = cellRow[cellNum];
                     cell.color = this.color;
                     cell.object = this;
                 }
             }
         }
+        else {
+            this.drawHLine(cellList, this.x,  this.y, this.w, this)
+            this.drawHLine(cellList, this.x,  this.y+this.h, this.w+1, this)
+            this.drawVLine(cellList, this.x,  this.y, this.h, this)
+            this.drawVLine(cellList, this.x+this.w,  this.y, this.h, this)
+        }
+        
     }
 }
 

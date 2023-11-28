@@ -16,11 +16,7 @@ class VerticalLine extends CanvasOb {
     }
 
     drawCells(cellList: Cell[][]) {
-        for(let y:number = this.y; y< this.l+this.y; y++){
-            let cell = cellList[this.x][y];
-            cell.color = this.color;
-            cell._object = this;
-        }
+        this.drawVLine(cellList, this.x, this.y, this.l, this);
     }
 }
 

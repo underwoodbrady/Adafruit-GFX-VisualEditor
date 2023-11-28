@@ -1,5 +1,6 @@
 import CanvasOb from "../CanvasOb";
 import type Cell from "../Cell";
+import type HorizontalLine from "./HorizontalLine";
 type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 
@@ -30,32 +31,16 @@ class RoundRect extends CanvasOb {
             this.drawQuarterCircle(cellList, this.x, this.y + this.h, this.r+1, 4)
         }
         else {
-            this.drawHLine(cellList, this.x+this.r, this.y, this.w-(this.r*2));
-            this.drawHLine(cellList, this.x+this.r, this.y+this.h, this.w-(this.r*2));
-            this.drawVLine(cellList, this.x, this.y+this.r, this.h-(this.r*2))
-            this.drawVLine(cellList, this.x+this.w, this.y+this.r, this.h-(this.r*2))
+            this.drawHLine(cellList, this.x+this.r, this.y, this.w-(this.r*2), this);
+            this.drawHLine(cellList, this.x+this.r, this.y+ this.h, this.w-(this.r*2), this);
+            this.drawVLine(cellList, this.x, this.y+this.r, this.h-(this.r*2), this)
+            this.drawVLine(cellList, this.x+this.w, this.y+this.r, this.h-(this.r*2), this)
             this.drawQuarterCircle(cellList, this.x, this.y, this.r+1, 1)
             this.drawQuarterCircle(cellList, this.x + this.w, this.y, this.r+1, 2)
             this.drawQuarterCircle(cellList, this.x + this.w, this.y + this.h, this.r+1, 3)
             this.drawQuarterCircle(cellList, this.x, this.y + this.h, this.r+1, 4)
         }
 
-    }
-
-    drawHLine(cellList: Cell[][], x: number, y: number, w: number) {
-        for (let drawX: number = x; drawX < w + x; drawX++) {
-            let cell = cellList[y][drawX];
-            cell.color = this.color;
-            cell._object = this;
-        }
-    }
-
-    drawVLine(cellList: Cell[][], x: number, y: number, h: number) {
-        for (let drawY: number = y; drawY < h + y; drawY++) {
-            let cell = cellList[drawY][x];
-            cell.color = this.color;
-            cell._object = this;
-        }
     }
 
     drawRect(cellList: Cell[][], x: number, y: number, w: number, h: number) {

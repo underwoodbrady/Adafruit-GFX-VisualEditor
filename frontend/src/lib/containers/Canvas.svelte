@@ -51,8 +51,10 @@
         const { mouseX, mouseY } = getMousePositions(e);
         startingMouseX = mouseX;
         startingMouseY = mouseY;
-        if (selectedTool.name == "paint-brush")
+        if (selectedTool.name == "paint-brush"){
+            mouseMove(e);
             canvas.onmousemove = (e) => mouseMove(e);
+        }
     };
 
     let addNewObject = (newObject: CanvasOb) => {
@@ -76,6 +78,8 @@
         let widthHeightToRadius = Math.min(
             Math.max(Math.round(cellWidth / 2), Math.round(cellHeight / 2))
         ); //TODO: Add boundry checking to prevent overflow
+
+        let ob;
 
         //Error checking
         if (
@@ -186,12 +190,28 @@
                 );
                 break;
             case "cursor":
-                let ob = cellList[cellY][cellX]._object;
+                ob = cellList[cellY][cellX]._object;
                 if (!(ob == undefined)) selectedObject.set(ob);
                 return;
             case "text":
                 newObject = new Text(cellX, cellY, "", selectedColor, 1);
                 selectedObject.set(newObject);
+                break;
+            case "paint-bucket":
+                ob = cellList[cellY][cellX]._object;
+                if (!(ob == undefined)) {
+                    ob.color = selectedColor;
+                    fullRedraw(); //TODO: Make more efficient
+                }else{
+                    newObject = new Rect(
+                    "fill",
+                    0,
+                    0,
+                    canvasDisplayedWidth/canvasScale-1,
+                    canvasDisplayedHeight/canvasScale-1,
+                    selectedColor
+                );
+                }
                 break;
             default:
         }

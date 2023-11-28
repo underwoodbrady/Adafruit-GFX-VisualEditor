@@ -35,53 +35,32 @@ class Triangle extends CanvasOb {
             return !(hasNeg && hasPos);
         }
 
-        let isPointOnLine = (pt:any, v1:any, v2:any) => { //TODO: Maybe just find point closest to each point on line
-            const epsilon = 32; // Tolerance to account for floating point errors - this might be stupid
-            const d = sign(pt, v1, v2);
-            if (Math.abs(d) > epsilon) return false; // Point is not on the line
-        
-            // Check if the point pt is between v1 and v2 by projecting it onto the line segment
-            const minX = Math.min(v1.x, v2.x);
-            const maxX = Math.max(v1.x, v2.x);
-            const minY = Math.min(v1.y, v2.y);
-            const maxY = Math.max(v1.y, v2.y);
-        
-            return pt.x >= minX && pt.x <= maxX && pt.y >= minY && pt.y <= maxY;
-        }
-        
-        let checkPointOnTriangleEdges = (pt:any) => {
-            if (isPointOnLine(pt, {x:this.x1, y:this.y1}, {x:this.x2, y:this.y2})) return true;
-            if (isPointOnLine(pt, {x:this.x2, y:this.y2}, {x:this.x3, y:this.y3})) return true;
-            if (isPointOnLine(pt, {x:this.x3, y:this.y3}, {x:this.x1, y:this.y1})) return true;
-            return false;
-        }
-        for (
-            let cellRowNum: number = Math.min(this.y1, this.y2, this.y3),
-            cellRowMax = Math.max(this.y1, this.y2, this.y3);
-            cellRowNum < cellRowMax + 1;
-            cellRowNum++
-        ) {
-            let cellRow = cellList[cellRowNum];
+        if(this.type == 'fill'){
             for (
-                let cellNum: number = Math.min(this.x1, this.x2, this.x3),
-                cellNumMax: number = Math.max(this.x1, this.x2, this.x3);
-                cellNum < cellNumMax + 1;
-                cellNum++
+                let cellRowNum: number = Math.min(this.y1, this.y2, this.y3),
+                cellRowMax = Math.max(this.y1, this.y2, this.y3);
+                cellRowNum < cellRowMax + 1;
+                cellRowNum++
             ) {
-                let cell = cellRow[cellNum];
-                if (this.type == "fill" && isPointInTriangle({x:cellNum, y:cellRowNum})) {
-                    cell.color = this.color;
-                    cell.object = this;
-                } else if (
-                    this.type == "outline" &&
-                    checkPointOnTriangleEdges({x:cellNum, y:cellRowNum})
+                let cellRow = cellList[cellRowNum];
+                for (
+                    let cellNum: number = Math.min(this.x1, this.x2, this.x3),
+                    cellNumMax: number = Math.max(this.x1, this.x2, this.x3);
+                    cellNum < cellNumMax + 1;
+                    cellNum++
                 ) {
-                    cell.color = this.color;
-                    cell.object = this;
+                    let cell = cellRow[cellNum];
+                    if (isPointInTriangle({x:cellNum, y:cellRowNum})) {
+                        cell.color = this.color;
+                        cell.object = this;
+                    } 
                 }
             }
+        }else{
+            this.drawLine(cellList, this.x1, this.y1, this.x2, this.y2, this)
+            this.drawLine(cellList, this.x2, this.y2, this.x3, this.y3, this)
+            this.drawLine(cellList, this.x1, this.y1, this.x3, this.y3, this)
         }
-
     }
 }
 

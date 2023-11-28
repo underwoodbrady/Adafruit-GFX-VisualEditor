@@ -16,11 +16,7 @@ class HorizontalLine extends CanvasOb {
     }
 
     drawCells(cellList: Cell[][]) {
-        for(let x:number = this.x; x< this.l+this.x; x++){
-            let cell = cellList[this.y][x];
-            cell.color = this.color;
-            cell._object = this;
-        }
+        this.drawHLine(cellList, this.x, this.y, this.l, this);
     }
 }
 
