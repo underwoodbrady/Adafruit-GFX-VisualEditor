@@ -187,7 +187,7 @@
             />
         </div>
         <div
-            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-400 border-2 border-black p-4 flex"
+            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-400 border-2 border-black p-4 flex rounded-sm"
         >
             <!--Properties-->
             <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} />
@@ -233,7 +233,7 @@
                     />
                 </div>
             </div>
-            <div class="w-full border-neutral-900 border-2 text-sm">
+            <div class="w-full border-neutral-900 border-2 text-sm rounded-sm">
                 <Highlight language={arduino} let:highlighted {code}>
                     <LineNumbers {highlighted} wrapLines />
                 </Highlight>

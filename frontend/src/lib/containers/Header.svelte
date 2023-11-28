@@ -1,4 +1,7 @@
 <script lang="ts">
+    import Tooltip from "$lib/components/Tooltip.svelte";
+    import ScreenDropdown from "./ScreenDropdown.svelte";
+
     export let choosenDisplay: string;
 </script>
 
@@ -11,23 +14,13 @@
     </div>
     <nav>
         <ul class="flex items-center space-x-6">
-            <li class="flex items-center space-x-2">
-                <img
-                    src="/display.svg"
-                    alt="Down Arrow"
-                    class="h-[15px] mt-[2px]"
-                />
-                <p class="font-semibold text-sm">{choosenDisplay}</p>
-                <img
-                    src="/down-arrow.svg"
-                    alt="Down Arrow"
-                    class="w-2 mt-[2px]"
-                />
+            <li>
+               <ScreenDropdown {choosenDisplay}/>
             </li>
-            <li class="flex items-center space-x-2">
+            <li class="flex items-center space-x-2 relative group">
                 <img
                     src="/microcontroller.svg"
-                    alt="Down Arrow"
+                    alt="Microcontroller"
                     class="w-4 mt-[2px]"
                 />
                 <p class="text-neutral-500 text-sm">Select Microcontroller</p>
@@ -36,14 +29,18 @@
                     alt="Down Arrow"
                     class="w-2 mt-[2px]"
                 />
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 hidden group-hover:inline-block">
+                    <Tooltip text="Coming soon"/>
+                </div>
             </li>
         </ul>
     </nav>
-    <button
-        on:click={() => {}}
-        class="flex items-center space-x-2 p-2 -m-2 cursor-pointer hover:bg-neutral-200 duration-75"
+    <a
+        href="https://github.com/underwoodbrady/Adafruit-GFX-VisualEditor"
+        target="_blank"
+        class="flex items-center space-x-2 p-2 -m-2 hover:bg-neutral-200 duration-75"
     >
         <img src="/github.svg" alt="Github Logo" class="h-4" />
         <p class="text-sm">Beta V0.2</p>
-    </button>
+    </a>
 </header>
