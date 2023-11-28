@@ -1,15 +1,26 @@
-![Visual Editor Logo](https://i.imgur.com/VhjikA2.png)
+![Visual Editor Logo](https://i.imgur.com/4x2mvKa.png)
 
-## Usage
+<p align="center">
+  <img src="https://img.shields.io/github/release/chartjs/Chart.js.svg?style=flat-square&maxAge=600" alt="Downloads">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chartjs/Chart.js/ci.yml?branch=master&style=flat-square">
+</p>
 
-Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into C++ code compatible with most microcontrollers and displays. Try it [here](https://pocket.montana.icu/auth/register)
+<h1 align="center">Visual Graphics to Arduino Sketches</h1>
+
+Adafruit GFX Visual Editor is an online HTML canvas based visual editing software that converts your designs directly into Arduino code compatible with most microcontrollers and displays. 
+
+It is available [online for free](https://pocket.montana.icu/auth/register) or you can run on your own computer using the steps in Local Setup. If not listed below in Known Issues please [report bugs](https://google.com) or [leave a suggestion](here) in github.
 
 ## Compatibility
+
+Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library.
 
 | Displays  | Compatibility |
 | ---- | ---- |
 | TBD  | ✅  |
 | TBD  | ❌  |
+
+If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You will just need to fill out the dimensions and name of the library manually.
 
 ## Features
 
@@ -30,6 +41,8 @@ Adafruit GFX Visual Editor is an online HTML canvas based visual editing softwar
 
 Rust backend is currently not needed for the project to run locally.
 
+For the frontend you must have nodejs+npm installed on your computer.
+
 ### Backend (Rust)
 
 ```bash
@@ -41,7 +54,8 @@ cargo run
 
 ```bash
 cd frontend
+npm install
 npm run dev -- --open 
 ```
-## Roadmap
+## Known Issues
 TODO
