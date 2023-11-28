@@ -1,7 +1,7 @@
 <script lang="ts">
     import Tool from "$lib/components/Tool.svelte";
 
-    type tool = { name: string; image: string };
+    type tool = { name: string; image: string, special?:boolean, disabled?: boolean };
 
     export let tools: tool[];
     export let selectedTool: tool;
@@ -19,5 +19,7 @@
         }}
         selected={tool == selectedTool}
         additionalInfo={hasAdditionalInfo(tool)}
+        special= {!!tool.special}
+        disabled = {!!tool.disabled}
     />
 {/each}

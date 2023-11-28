@@ -3,7 +3,7 @@ import type HorizontalLine from "./shapes/HorizontalLine";
 import type Line from "./shapes/Line";
 import type VerticalLine from "./shapes/VerticalLine";
 
-type shapes = 'circle' | 'rect' | 'triangle' | 'round-rect' | 'line' | 'dot' | 'h-line' | 'v-line' | 'text';
+type shapes = 'circle' | 'rect' | 'triangle' | 'round-rect' | 'line' | 'dot' | 'h-line' | 'v-line' | 'text' | 'star' | 'heart';
 type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 

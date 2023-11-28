@@ -23,7 +23,7 @@
     let canvasDisplayedWidth: number = canvasTrueWidth * canvasScale;
     let canvasDisplayedHeight: number = canvasTrueHeight * canvasScale;
 
-    let showCode: boolean = false;
+    let showCode: boolean = true;
     type generatingStages =
         | "Generating"
         | "Optimizing"
@@ -92,6 +92,26 @@
             name: "text",
             image: "/text.svg",
         },
+        {
+            name: "image",
+            image: "/image.svg",
+            disabled: true
+        },
+        {
+            name: "heart",
+            image: "/heart.svg",
+            special:true
+        },
+        {
+            name: "star-open",
+            image: "/star-open.svg",
+            special:true
+        },
+        {
+            name: "star-closed",
+            image: "/star-closed.svg",
+            special:true
+        },
     ];
 
     type HEX = `#${string}`;
@@ -132,7 +152,7 @@
 
 <Header choosenDisplay={`OLED ${canvasTrueWidth}x${canvasTrueHeight}`} />
 <main
-    class="flex flex-col space-y-4 justify-center mt-[57px] pt-6 mx-auto"
+    class="flex flex-col space-y-4 justify-center mt-[57px] py-6 mx-auto"
     style={`width:${canvasDisplayedWidth + 4}px`}
 >
     <section class="flex items-center space-x-4 place-self-end">
@@ -187,7 +207,7 @@
             />
         </div>
         <div
-            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-400 border-2 border-black p-4 flex rounded-sm"
+            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-300 border-2 border-black p-4 flex rounded-sm"
         >
             <!--Properties-->
             <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} />
@@ -204,7 +224,7 @@
         />
     </section>
     {#if showCode}
-        <section class="pt-6 flex-col space-y-4 pb-6">
+        <section class="py-6 flex-col space-y-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <p class="font-semibold">{currentStage}</p>

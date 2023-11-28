@@ -114,7 +114,7 @@
                                 type="text"
                                 value={selectedObject[key]}
                                 bind:this={textInput}
-                                class="bg-neutral-300 w-full text-right"
+                                class="bg-neutral-200 w-full text-right"
                                 on:change={(change) => {
                                     stringChanged(change, key);
                                 }}
@@ -130,7 +130,7 @@
                                 min="0"
                                 max="2"
                                 value={selectedObject[key]}
-                                class="bg-neutral-300 w-full text-right"
+                                class="bg-neutral-200 w-full text-right"
                                 on:change={(change) => {
                                     numberChanged(change, key);
                                 }}
@@ -144,7 +144,7 @@
                             <input
                                 type="number"
                                 value={selectedObject[key]}
-                                class="bg-neutral-300 w-full text-right"
+                                class="bg-neutral-200 w-full text-right rounded-sm"
                                 on:change={(change) => {
                                     numberChanged(change, key);
                                 }}
