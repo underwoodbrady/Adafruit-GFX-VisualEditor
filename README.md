@@ -14,7 +14,7 @@ It is available [online for free](https://pocket.montana.icu/auth/register) or y
 
 Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library.
 
-| Displays  | Compatibility |
+| Displays  | Comp |
 | ---- | ---- |
 | OLED 96x64| ✅  |
 | OLED 128x32| ✅  |
