@@ -1,0 +1,46 @@
+{
+    "OLED128x64": {
+        "lib": "Adafruit_SSD1306.h",
+        "details": "Monochrome 0.96 inch"
+    },
+    "OLED96x64": {
+        "lib": "Adafruit_SSD1331.h",
+        "details": "Color 0.96 inch"
+    },
+    "OLED170x320": {
+        "lib": "Adafruit_ST7789.h",
+        "details": "IPS 1.9 inch"
+    },
+    "LCD240X320": {
+        "lib": "Adafruit_ILI9341.h",
+        "details": "TFT 2.8 inch"
+    },
+    "LCD128X160": {
+        "lib": "Adafruit_ST7735R.h",
+        "details": "TFT 1.8 inch"
+    },
+    "LCD128X128": {
+        "lib": "Adafruit_ST7735.h",
+        "details": "TFT 1.44 inch"
+    },
+    "OLED128x128": {
+        "lib": "Adafruit_SSD1351.h",
+        "details": "Color 1.5 inch"
+    },
+    "OLED128x32": {
+        "lib": "Adafruit_SSD1306.h",
+        "details": "Monochrome 0.91 inch"
+    },
+    "LCD240x320": {
+        "lib": "Adafruit_ILI9341.h",
+        "details": "TFT 2.4 inch"
+    },
+    "LCD480x320": {
+        "lib": "Adafruit_HX8357.h",
+        "details": "TFT 3.5 inch"
+    },
+    "LCD220x176": {
+        "lib": "Adafruit_HX8340BN.h",
+        "details": "TFT 2.2 inch"
+    }
+}

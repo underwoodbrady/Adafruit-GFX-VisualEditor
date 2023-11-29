@@ -1,15 +1,30 @@
 import codeFormat from "./codeFormat.txt";
 import codeONLYFormat from "./codeONLYFormat.txt";
+import displayToLib from "./displayToLib.json";
 import type CanvasOb from "./classes/CanvasOb";
 import type Rect from "./classes/shapes/Rect";
 import type Circle from "./classes/shapes/Circle";
+import type Triangle from "./classes/shapes/Triangle";
+import type RoundRect from "./classes/shapes/RoundRect";
+import type Line from "./classes/shapes/Line";
+import type Dot from "./classes/shapes/Dot";
 
+
+type display = keyof typeof displayToLib;
 
 //TODO: Make optimize function when shapes are fully overlapping
 let optimizeObjects = (objects: CanvasOb[]) => {
 
 }
 
+//TODO: Maybe don't use displayToLib and instead store library in page.svelte and pass in
+let getDisplayLibrary = (display: display):string => {
+    return `<${displayToLib[display].lib}>` || "";
+}
+
+let convertColorsToCode = (color: string): string => {
+ return ""
+}
 
 //TODO: Convert object.color to format arduino can understand
 let convertObjectsToCode = (object: CanvasOb): string => {
@@ -33,19 +48,27 @@ let convertObjectsToCode = (object: CanvasOb): string => {
             }
             break;
         case "triangle":
+            obj = (object as Triangle); //Probably bad practice
+
             break;
         case "round-rect":
+            obj = (object as RoundRect); //Probably bad practice
+
             break;
         case "line":
+            obj = (object as Line); //Probably bad practice
+
             break;
         case "dot":
+            obj = (object as Dot); //Probably bad practice
+
             break;
     }
     console.log(returnString)
     return `    ${returnString}`;
 }
 
-export const createFullCode = async (displayLibrary: string, customFontImports: string[], customColorDefinitions: string[], objectList: CanvasOb[]) => {
+export const createFullCode = async (display: display, customFontImports: string[], customColorDefinitions: string[], objectList: CanvasOb[]) => {
     let newLines:string[] = [];
     await fetch(codeFormat)
         .then((response) => response.text())
@@ -57,10 +80,11 @@ export const createFullCode = async (displayLibrary: string, customFontImports: 
                 if (line.includes("`")) {
                     switch (injected) {
                         case 0:
-                            line = "//Add specific library import"
+                            const displayLib = getDisplayLibrary(display);
+                            line = displayLib || "//TODO: Add specific library import"
                             break;
                         case 1:
-                            line = "//Add specific font imports"
+                            line = "//TODO: Add specific font imports"
                             break;
                         case 2:
                             if (customColorDefinitions)
@@ -71,7 +95,7 @@ export const createFullCode = async (displayLibrary: string, customFontImports: 
                             line = (objectList.map((object) => convertObjectsToCode(object))).join("\n")
                             break;
                         default:
-                            throw Error("No Bueno")
+                            throw Error("No está chido")
                     }
                     injected++
                 }
