@@ -2,7 +2,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/release/chartjs/Chart.js.svg?style=flat-square&maxAge=600" alt="Downloads">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chartjs/Chart.js/ci.yml?branch=master&style=flat-square">
 </p>
 
 <h1 align="center">Visual Graphics to Arduino Sketches</h1>
@@ -17,8 +16,10 @@ Any microcontroller than can run Arduino code should be compatible with Adafruit
 
 | Displays  | Compatibility |
 | ---- | ---- |
-| TBD  | ✅  |
-| TBD  | ❌  |
+| OLED 96x64, 128x32, 128x64, 128x128, 170x320| ✅  |
+| LCD 128X128, 128X160, 220x176, 240X320, 480x320  | ✅  |
+| LED Matrix  | ❌  |
+| I2C Backpack  | ❌  |
 
 If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You will just need to fill out the dimensions and name of the library manually.
 
@@ -30,11 +31,12 @@ If you don't see the display you are using above, but there is a Adafruit GFX li
 - Update, move, and scale graphics to your liking
 - Fix mistakes with undo or completely clear the scene
 - Optimize, and generate code for the Arduino IDE
-- _Create text and upload custom fonts (Coming Soon)_
+- Create and stylize basic text
+- _Upload custom fonts or use fonts included in adafruit library (Coming Soon)_
 - _Import previously generated code to continue where you left off (Coming Soon)_
 - _Upload images or bitmaps (Coming Soon)_
-- _Test changes live by streaming to your device (Coming Soon)_
-- _Create multi-step animations (Coming Soon)_
+- _Test changes live by streaming to your device (Coming Eventually)_
+- _Create multi-step animations (Coming Eventually)_
 
 
 ## Local Setup
@@ -59,3 +61,16 @@ npm run dev -- --open
 ```
 ## Known Issues
 TODO
+
+## Contributing
+
+If you have a display that is compatible with Adafruit GFX's library but is not included above you can contribute by adding it to _'frontend/src/displayToLib.json'_ in the following format:
+
+
+```json
+  "[ScreenType][Resolution]":
+    {
+      "lib": "[AdafruitLibrary]",
+      "details": "[DisplayType][DisplaySize][ExtraDetails(optional)]"
+    }
+```
