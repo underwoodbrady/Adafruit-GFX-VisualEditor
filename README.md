@@ -27,7 +27,7 @@ Any microcontroller than can run Arduino code should be compatible with Adafruit
 | LCD 240X320  | ✅  |
 | LCD 480x320  | ✅  |
 | LED Matrix  | ❌  |
-| I2C Backpack  | ❌  |
+| 7-Segment I2C Backpack  | ❌  |
 
 If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You will just need to fill out the dimensions and name of the library manually.
 
