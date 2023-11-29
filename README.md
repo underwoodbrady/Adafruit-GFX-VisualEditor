@@ -26,6 +26,7 @@ Any microcontroller than can run Arduino code should be compatible with Adafruit
 | 2.2" LCD 220x176 | ✅  |
 | 2.4" LCD 240X320  | ✅  |
 | 3.5" LCD 480x320  | ✅  |
+| **Custom**  | ✅  |
 | LED Matrix  | ❌  |
 | 7-Segment I2C Backpack  | ❌  |
 
