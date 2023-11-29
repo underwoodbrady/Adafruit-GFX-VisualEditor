@@ -1,5 +1,7 @@
 import CanvasOb from "../CanvasOb";
 import type Cell from "../Cell";
+import Circle from "../shapes/Circle";
+import Triangle from "../shapes/Triangle";
 type shapeType = 'fill' | 'outline';
 type HEX = `#${string}`;
 
@@ -18,34 +20,15 @@ class Heart extends CanvasOb {
     }
 
     //TODO: Get rid of the +1 across multiple classes
+    //TODO: Use math.floor or math.ceil instead of round
     drawCells(cellList: Cell[][]) {
-        if (this.type == 'fill') {
-            for (
-                let cellRowNum: number = this.y,
-                cellRowMax = this.y + this.h;
-                cellRowNum < cellRowMax + 1;
-                cellRowNum++
-            ) {
-                let cellRow = cellList[cellRowNum];
-                for (
-                    let cellNum: number = this.x,
-                    cellNumMax: number = this.x + this.w;
-                    cellNum < cellNumMax + 1;
-                    cellNum++
-                ) {
-                    let cell = cellRow[cellNum];
-                    cell.color = this.color;
-                    cell.object = this;
-                }
-            }
-        }
-        else {
-            this.drawHLine(cellList, this.x,  this.y, this.w, this)
-            this.drawHLine(cellList, this.x,  this.y+this.h, this.w+1, this)
-            this.drawVLine(cellList, this.x,  this.y, this.h, this)
-            this.drawVLine(cellList, this.x+this.w,  this.y, this.h, this)
-        }
-        
+
+        let c1 = new Circle('fill',Math.floor(this.x+(this.w*2/7)),Math.floor(this.y+(this.h*2/7)), Math.floor((this.w*2/7)), this.color)
+        c1.drawCells(cellList);
+        let c2 = new Circle('fill',Math.floor(this.x+this.w-(this.w*2/7)),Math.floor(this.y+(this.h*2/7)), Math.floor((this.w*2/7)), this.color)
+        c2.drawCells(cellList);
+        let t1 = new Triangle('fill',Math.floor(this.x+(this.w/2)),this.y+this.h, Math.floor(this.x+(this.w*32/35)), Math.floor(this.y+(this.h*17/35)), Math.floor(this.x+(this.w*3/35)), Math.floor(this.y+(this.h*17/35)), this.color);
+        t1.drawCells(cellList);
     }
 }
 

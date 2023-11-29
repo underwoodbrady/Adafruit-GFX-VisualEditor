@@ -98,18 +98,13 @@
             disabled: true
         },
         {
-            name: "heart",
+            name: "heart-closed",
             image: "/heart.svg",
             special:true
         },
         {
             name: "star-open",
             image: "/star-open.svg",
-            special:true
-        },
-        {
-            name: "star-closed",
-            image: "/star-closed.svg",
             special:true
         },
     ];

@@ -14,6 +14,7 @@
     import Line from "../../classes/shapes/Line";
     import Text from "../../classes/shapes/Text";
     import RoundRect from "../../classes/shapes/RoundRect";
+    import Heart from "../../classes/compoundshapes/Heart";
 
     type HEX = `#${string}`;
 
@@ -189,6 +190,16 @@
                     selectedColor
                 );
                 break;
+            case "heart-closed":
+                newObject = new Heart(
+                    "fill",
+                    cellX,
+                    cellY,
+                    widthHeightToRadius*2,
+                    widthHeightToRadius*2,
+                    selectedColor
+                );
+                break;
             case "cursor":
                 ob = cellList[cellY][cellX]._object;
                 if (!(ob == undefined)) selectedObject.set(ob);
@@ -331,6 +342,9 @@
                 break;
             case "text":
                 (object as Text).drawCells(cellList);
+                break;
+            case "heart":
+                (object as Heart).drawCells(cellList);
                 break;
         }
     };
