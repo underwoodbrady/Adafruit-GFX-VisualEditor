@@ -16,16 +16,8 @@ Any microcontroller than can run Arduino code should be compatible with Adafruit
 
 | Displays  | Compatibility |
 | ---- | ---- |
-| OLED96x64  | ✅  |
-| OLED128x32  | ✅   |
-| OLED128x64  | ✅  |
-| OLED128x128  | ✅  |
-| OLED170x320  | ✅  |
-| LCD128X128  | ✅  |
-| LCD128X160  | ✅  |
-| LCD220x176  | ✅  |
-| LCD240X320  | ✅  |
-| LCD480x320  | ✅  |
+| OLED 96x64, 128x32, 128x64, 128x128, 170x320| ✅  |
+| LCD 128X128, 128X160, 220x176, 240X320, 480x320  | ✅  |
 | LED Matrix  | ❌  |
 | I2C Backpack  | ❌  |
 
