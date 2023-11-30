@@ -9,24 +9,24 @@
         "res": "96x64",
         "details": "Color 0.96 inch"
     },
-    "OLED 170x320": {
+    "OLED 320x170": {
         "lib": "Adafruit_ST7789.h",
-        "res": "170x320",
+        "res": "320x170",
         "details": "IPS 1.9 inch"
     },
     "LCD 240X320": {
         "lib": "Adafruit_ILI9341.h",
-        "res": "240X320",
+        "res": "240x320",
         "details": "TFT 2.8 inch"
     },
-    "LCD 128X160": {
+    "LCD 128x160": {
         "lib": "Adafruit_ST7735R.h",
-        "res": "128X160",
+        "res": "128x160",
         "details": "TFT 1.8 inch"
     },
-    "LCD 128X128": {
+    "LCD 128x128": {
         "lib": "Adafruit_ST7735.h",
-        "res": "128X128",
+        "res": "128x128",
         "details": "TFT 1.44 inch"
     },
     "OLED 128x128": {

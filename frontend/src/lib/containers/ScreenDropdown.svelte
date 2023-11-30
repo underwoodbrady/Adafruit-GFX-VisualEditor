@@ -4,7 +4,7 @@
 
     export let choosenDisplay: string;
     export let displays: typeof displayToLib;
-    export let dropdownOpen: boolean = false;
+    export let dropdownOpen: boolean;
     export let setChoosenDisplay: (display: keyof typeof displayToLib) => void;
 
     let displayMap: [keyof typeof displayToLib] = Object.keys(displays) as [

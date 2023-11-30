@@ -6,6 +6,7 @@
 
     export let choosenDisplay: string = "Select Display";
     export let displays: typeof displayToLib;
+    export let dropdownOpen: boolean = false;
 </script>
 
 <header
@@ -18,7 +19,7 @@
     <nav>
         <ul class="flex items-center space-x-6">
             <li>
-               <ScreenDropdown {choosenDisplay} {displays} {setChoosenDisplay}/>
+               <ScreenDropdown {choosenDisplay} {displays} {setChoosenDisplay} {dropdownOpen}/>
             </li>
             <li class="flex items-center space-x-2 relative group">
                 <img

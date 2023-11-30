@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import type CanvasOb from "../../classes/CanvasOb";
     import Cell from "../../classes/Cell";
     import {
@@ -386,6 +386,24 @@
             fullRedraw();
         });
     });
+
+    afterUpdate(()=>{
+        console.log($objectListWritable)
+        if (!ctx) return //Don't run on mount
+        if ($objectListWritable.length > 0) return //Don't run if there are objects
+
+        console.log("switched displays");
+        const res = canvas.getContext("2d");
+        if (!res) return;
+        ctx = res;
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvasDisplayedWidth, canvasDisplayedHeight);
+
+        updateCanvasBoundingRect(canvas);
+        cellList = [];
+        createCells();
+    })
 </script>
 
 <canvas

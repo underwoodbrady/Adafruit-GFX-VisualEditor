@@ -6,7 +6,10 @@
     import Header from "$lib/containers/Header.svelte";
     import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
     import ToolSelector from "$lib/containers/ToolSelector.svelte";
-    import { objectListWritable, selectedObject } from "$lib/containers/objectList";
+    import {
+        objectListWritable,
+        selectedObject,
+    } from "$lib/containers/objectList";
     import { onMount } from "svelte";
 
     import Highlight, { LineNumbers } from "svelte-highlight";
@@ -14,15 +17,23 @@
     import arduinoLight from "svelte-highlight/styles/docco";
     import { createFullCode } from "../createCode";
     import displayToLib from "../displayToLib.json";
+    import Tooltip from "$lib/components/Tooltip.svelte";
 
-    let canvasTrueWidth: number = 320;
-    let canvasTrueHeight: number = 170;
+    let canvasTrueWidth: number;
+    let canvasTrueHeight: number;
 
     //TODO: Add some logic on how much to scale based on true width
-    let canvasScale: number = 2;
+    let canvasScale: number = 1;
+    const canvasMaxScale: number = 5;
 
-    let canvasDisplayedWidth: number = canvasTrueWidth * canvasScale;
-    let canvasDisplayedHeight: number = canvasTrueHeight * canvasScale;
+    let canvasDisplayedWidth: number;
+    let canvasDisplayedHeight: number;
+
+    $: canvasDisplayedWidth = canvasTrueWidth * canvasScale;
+    $: canvasDisplayedHeight = canvasTrueHeight * canvasScale;
+
+    //canvasTrueWidth = 128
+    //canvasTrueHeight= 64
 
     let showCode: boolean = true;
     type generatingStages =
@@ -96,17 +107,17 @@
         {
             name: "image",
             image: "/image.svg",
-            disabled: true
+            disabled: true,
         },
         {
             name: "heart-closed",
             image: "/heart.svg",
-            special:true
+            special: true,
         },
         {
             name: "star-open",
             image: "/star-open.svg",
-            special:true
+            special: true,
         },
     ];
 
@@ -132,12 +143,22 @@
     let selectedColor: HEX;
 
     //Unify arrow functions vs traditional
-    let setChoosenDisplay = (display: keyof typeof displayToLib)=>{
+    let setChoosenDisplay = (display: keyof typeof displayToLib) => {
         selectedDisplay = display;
-    }
+        objectListWritable.set([]);
+        canvasTrueWidth = Number(displayToLib[display].res.split("x")[0]);
+        canvasTrueHeight = Number(displayToLib[display].res.split("x")[1]);
+        // canvasDisplayedWidth = canvasTrueWidth * canvasScale;
+        // canvasDisplayedHeight = canvasTrueHeight * canvasScale;
+    };
 
     let generateCode = () => {
-        createFullCode("", [""], [""], $objectListWritable).then((c) => {
+        createFullCode(
+            "" as keyof typeof displayToLib,
+            [""],
+            [""],
+            $objectListWritable,
+        ).then((c) => {
             code = c;
         });
     };
@@ -146,22 +167,36 @@
         selectedTool = tools[0];
         selectedColor = colors[0];
     });
+
+    let displayDropdownOpen: boolean = false;
 </script>
 
 <svelte:head>
     {@html arduinoLight}
 </svelte:head>
 
-<Header displays={displayToLib} choosenDisplay={selectedDisplay} {setChoosenDisplay} />
+<Header
+    displays={displayToLib}
+    choosenDisplay={selectedDisplay}
+    {setChoosenDisplay}
+    dropdownOpen={displayDropdownOpen}
+/>
 <main
-    class="flex flex-col space-y-4 justify-center mt-[57px] py-6 mx-auto"
-    style={`width:${canvasDisplayedWidth + 4}px`}
+    class={"flex flex-col space-y-4 justify-center mt-[57px] py-6 mx-auto" +
+        (canvasDisplayedWidth ? "" : " w-[500px]")}
+    style={canvasDisplayedWidth ? `width:${canvasDisplayedWidth + 4}px` : ""}
 >
     <section class="flex items-center space-x-4 place-self-end">
         <!--Settings-->
 
         <IconButton icon="/undo.svg" onClick={() => {}} />
-        <TextButton icon="/delete.svg" text="Clear" onClick={() => {objectListWritable.set([])}} />
+        <TextButton
+            icon="/delete.svg"
+            text="Clear"
+            onClick={() => {
+                objectListWritable.set([]);
+            }}
+        />
         <IconButton icon="/gear.svg" onClick={() => {}} filled />
         <TextButton
             icon="/code.svg"
@@ -185,34 +220,80 @@
                 }}
             />
         </div>
-        <div
-            class="relative bg-white border-2 border-neutral-900"
-            style={`width:${canvasDisplayedWidth + 4}px;height:${
-                canvasDisplayedHeight + 4
-            }px`}
-        >
-            <!--Canvas-->
-            <p
-                class="absolute -top-5 left-0 text-xs font-bold text-neutral-900"
+        {#if canvasTrueHeight && canvasTrueWidth}
+            <div
+                class="relative bg-neutral-100 border-2 border-neutral-900"
+                style={`width:${canvasDisplayedWidth + 4}px;height:${
+                    canvasDisplayedHeight + 4
+                }px`}
             >
-                {canvasTrueWidth}x{canvasTrueHeight}
-                <span class="font-semibold"
-                    >({canvasDisplayedWidth}x{canvasDisplayedHeight})</span
+                <!--Canvas-->
+                <p
+                    class="absolute -top-5 left-0 text-xs font-bold text-neutral-900"
                 >
-            </p>
-            <Canvas
-                {selectedColor}
-                {selectedTool}
-                {canvasDisplayedWidth}
-                {canvasDisplayedHeight}
-                {canvasScale}
-            />
-        </div>
+                    {canvasTrueWidth}x{canvasTrueHeight}
+                    <span class="font-semibold"
+                        >({canvasDisplayedWidth}x{canvasDisplayedHeight})</span
+                    >
+                </p>
+                <Canvas
+                    {selectedColor}
+                    {selectedTool}
+                    {canvasDisplayedWidth}
+                    {canvasDisplayedHeight}
+                    {canvasScale}
+                />
+            </div>
+        {:else}
+            <div
+                class="relative bg-neutral-100 border-2 border-neutral-900 w-[500px] h-80 flex items-center justify-center flex-col font-semibold space-y-2 text-sm"
+            >
+                <!--Canvas-->
+                <div class="flex items-center space-x-1">
+                    <img
+                        src="/display-blue.svg"
+                        alt="Display"
+                        class="h-4 mt-[2px]"
+                    />
+                    <p>
+                        <button
+                            class="text-blue-500 underline"
+                            on:click={() => {
+                                displayDropdownOpen = true;
+                            }}>Select</button
+                        > display from above
+                    </p>
+                </div>
+                <p class="text-neutral-500 text-xs">Or</p>
+                <div
+                    class="relative flex items-center space-x-1 select-none group"
+                >
+                    <img
+                        src="/upload.svg"
+                        alt="Display"
+                        class="h-4 mt-[2px] opacity-40"
+                    />
+                    <p class="text-black/40">
+                        <a class="text-blue-500/40 underline" href="">Upload</a>
+                        previous code
+                    </p>
+                    <div
+                        class="absolute -bottom-4 left-1/2 -translate-x-1/2 group-hover:inline hidden"
+                    >
+                        <Tooltip text="Coming Soon" />
+                    </div>
+                </div>
+            </div>
+        {/if}
         <div
             class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-300 border-2 border-black p-4 flex rounded-sm"
         >
             <!--Properties-->
-            <PropertiesPanel {canvasTrueWidth} {canvasTrueHeight} selectedObject={$selectedObject} />
+            <PropertiesPanel
+                {canvasTrueWidth}
+                {canvasTrueHeight}
+                selectedObject={$selectedObject}
+            />
         </div>
     </section>
     <section class="flex flex-wrap gap-4 place-self-start">
