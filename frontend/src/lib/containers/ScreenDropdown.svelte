@@ -2,13 +2,14 @@
     import Screen from "$lib/components/Screen.svelte";
     import displayToLib from "../../displayToLib.json";
 
-
     export let choosenDisplay: string;
     export let displays: typeof displayToLib;
     export let dropdownOpen: boolean = false;
-    export let setChoosenDisplay:(display:keyof typeof displayToLib)=>void;
+    export let setChoosenDisplay: (display: keyof typeof displayToLib) => void;
 
-    let displayMap: [keyof typeof displayToLib] = Object.keys(displays) as [keyof typeof displayToLib]; //TODO: FIX this is wack
+    let displayMap: [keyof typeof displayToLib] = Object.keys(displays) as [
+        keyof typeof displayToLib,
+    ]; //TODO: FIX this is wack
 
     function toggleDropdown() {
         dropdownOpen = !dropdownOpen;
@@ -29,16 +30,39 @@
         <div
             class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm"
         >
-            <search class="mb-2">
-                <input
-                    type="search"
-                    class="max-w-full h-6 bg-neutral-200 text-xs px-2 font-semibold"
-                    placeholder="Search ..."
-                />
-            </search>
+            <div class="flex space-x-2 items-center mb-2">
+                <search
+                    class="relative max-w-full h-8 w-40 bg-neutral-200 flex items-center"
+                >
+                    <input
+                        type="search"
+                        class="absolute left-0 top-0 right-0 bottom-0 bg-neutral-200 text-neutral-800 text-sm pl-8 pr-2 placeholder:text-neutral-400 border-none outline-none"
+                        placeholder="Search"
+                    />
+                    <img
+                        src="/search.svg"
+                        alt="Search Icon"
+                        class="h-3 z-20 pl-3"
+                    />
+                </search>
+                <button
+                    on:click={() => {}}
+                    class="text-xs font-semibold text-blue-500 underline flex items-center p-1"
+                    ><img
+                        src="/gears.svg"
+                        alt="gears icon"
+                        class="h-3 mr-1"
+                    />Custom</button
+                >
+            </div>
             <ul class="flex flex-col max-h-60 overflow-y-scroll">
                 {#each displayMap as display}
-                    <Screen name={display} details={displayToLib[display].details} library={displayToLib[display].lib}  onClick={()=>setChoosenDisplay(display)}/>
+                    <Screen
+                        name={display}
+                        details={displayToLib[display].details}
+                        library={displayToLib[display].lib}
+                        onClick={() => setChoosenDisplay(display)}
+                    />
                 {/each}
             </ul>
         </div>

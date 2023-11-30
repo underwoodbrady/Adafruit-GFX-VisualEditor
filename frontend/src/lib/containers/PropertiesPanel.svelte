@@ -19,7 +19,7 @@
         x: number,
         y: number,
         w: number,
-        h: number
+        h: number,
     ): boolean => {
         if (
             x + w >= canvasTrueWidth ||
@@ -41,34 +41,36 @@
         let so = selectedObject;
         so[key] = Number((change.target as HTMLInputElement).value);
         if (checkCanvasBoundries(so.x, so.y, so.w, so.h))
-            canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
+            canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
     };
 
     let stringChanged = (change: any, key: objectKeys) => {
         console.log((change.target as HTMLInputElement).value);
         let so = selectedObject;
         so[key] = String((change.target as HTMLInputElement).value);
-        canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
+        canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
     };
 
     let colorChanged = (change: any, key: objectKeys) => {
         console.log(change);
         let so = selectedObject;
         so[key] = change;
-        canvasRedraws.update(canvasRedraws=>canvasRedraws+1);
+        canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
     };
 
-    let deleteObject = ()=>{
-       objectListWritable.update((currentVal)=>currentVal.filter((object)=>object!=selectedObject))
-    }
+    let deleteObject = () => {
+        objectListWritable.update((currentVal) =>
+            currentVal.filter((object) => object != selectedObject),
+        );
+    };
 
-    let duplicateObject = ()=>{
-        alert("Feature coming soon...")
+    let duplicateObject = () => {
+        alert("Feature coming soon...");
         //TODO: Implement, this is harder than I thought it would be
         // if(selectedObject == undefined) return
         // let newObjList = $objectListWritable;
         // objectListWritable.set(newObjList);
-    }
+    };
 
     afterUpdate(() => {
         if (selectedObject) {
@@ -80,7 +82,7 @@
     });
 </script>
 
-<section class="flex flex-col space-y-2 min-h-full">
+<section class="flex flex-col space-y-2 min-h-full w-full">
     <div class="flex space-x-2 items-center">
         <img src="/properties.svg" alt="Properties Icon" class="w-4" />
         <p class="text-sm font-semibold">Properties</p>
@@ -172,8 +174,17 @@
             </div>
         </div>
     {:else}
-        <p class="text-center text-neutral-700 pt-4 text-xs">
-            Select Object With () Tool
-        </p>
+        <div class="flex-col space-y-1 pt-4">
+            <p class="text-center text-neutral-700  text-xs">
+                Select Object With
+            </p>
+            <p class="text-center text-neutral-700 text-xs">
+                <img
+                    src="/cursor-grey.svg"
+                    alt="grey cursor"
+                    class="w-2 inline align-middle"
+                /> Tool
+            </p>
+        </div>
     {/if}
 </section>

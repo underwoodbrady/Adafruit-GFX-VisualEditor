@@ -41,7 +41,7 @@ If you don't see the display you are using above, but there is a Adafruit GFX li
 - Fix mistakes with undo or completely clear the scene
 - Optimize, and generate code for the Arduino IDE
 - Create and stylize basic text
-- _Upload custom fonts or use fonts included in adafruit library (Coming Soon)_
+- _Upload custom fonts or use all fonts included in adafruit library (Coming Soon)_
 - _Import previously generated code to continue where you left off (Coming Soon)_
 - _Upload images or bitmaps (Coming Soon)_
 - _Test changes live by streaming to your device (Coming Eventually)_
