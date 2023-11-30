@@ -14,12 +14,21 @@ It is available [online for free](https://pocket.montana.icu/auth/register) or y
 
 Any microcontroller than can run Arduino code should be compatible with Adafruits GFX library.
 
-| Displays  | Compatibility |
+| Displays  |  |
 | ---- | ---- |
-| OLED 96x64, 128x32, 128x64, 128x128, 170x320| ✅  |
-| LCD 128X128, 128X160, 220x176, 240X320, 480x320  | ✅  |
+| **Custom**  | ✅  |
+| 0.96" OLED 96x64| ✅  |
+| 0.91" OLED 128x32| ✅  |
+| 0.96" OLED 128x64| ✅  |
+| 1.5" OLED 128x128| ✅  |
+| 1.9" OLED 170x320| ✅  |
+| 1.44" LCD 128X128  | ✅  |
+| 1.8" LCD 128X160  | ✅  |
+| 2.2" LCD 220x176 | ✅  |
+| 2.4" LCD 240X320  | ✅  |
+| 3.5" LCD 480x320  | ✅  |
 | LED Matrix  | ❌  |
-| I2C Backpack  | ❌  |
+| 7-Segment I2C Backpack  | ❌  |
 
 If you don't see the display you are using above, but there is a Adafruit GFX library for it, the program will still work. You will just need to fill out the dimensions and name of the library manually.
 
