@@ -13,6 +13,7 @@
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
     import { createFullCode } from "../createCode";
+    import displayToLib from "../displayToLib.json";
 
     let canvasTrueWidth: number = 320;
     let canvasTrueHeight: number = 170;
@@ -126,8 +127,14 @@
         "#",
     ];
 
+    let selectedDisplay: keyof typeof displayToLib;
     let selectedTool: { name: string; image: string };
     let selectedColor: HEX;
+
+    //Unify arrow functions vs traditional
+    let setChoosenDisplay = (display: keyof typeof displayToLib)=>{
+        selectedDisplay = display;
+    }
 
     let generateCode = () => {
         createFullCode("", [""], [""], $objectListWritable).then((c) => {
@@ -145,7 +152,7 @@
     {@html arduinoLight}
 </svelte:head>
 
-<Header choosenDisplay={`OLED ${canvasTrueWidth}x${canvasTrueHeight}`} />
+<Header displays={displayToLib} choosenDisplay={selectedDisplay} {setChoosenDisplay} />
 <main
     class="flex flex-col space-y-4 justify-center mt-[57px] py-6 mx-auto"
     style={`width:${canvasDisplayedWidth + 4}px`}

@@ -71,6 +71,7 @@ If you have a display that is compatible with Adafruit GFX's library but is not 
   "[ScreenType][Resolution]":
     {
       "lib": "[AdafruitLibrary]",
+      "res": "[Resolution(WxH)]",
       "details": "[DisplayType][DisplaySize][ExtraDetails(optional)]"
     }
 ```

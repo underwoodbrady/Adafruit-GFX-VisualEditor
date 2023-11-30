@@ -1,8 +1,11 @@
 <script lang="ts">
     import Tooltip from "$lib/components/Tooltip.svelte";
     import ScreenDropdown from "./ScreenDropdown.svelte";
+    import type displayToLib from "../../displayToLib.json";
+    export let setChoosenDisplay:(display:keyof typeof displayToLib)=>void;
 
-    export let choosenDisplay: string;
+    export let choosenDisplay: string = "Select Display";
+    export let displays: typeof displayToLib;
 </script>
 
 <header
@@ -15,7 +18,7 @@
     <nav>
         <ul class="flex items-center space-x-6">
             <li>
-               <ScreenDropdown {choosenDisplay}/>
+               <ScreenDropdown {choosenDisplay} {displays} {setChoosenDisplay}/>
             </li>
             <li class="flex items-center space-x-2 relative group">
                 <img

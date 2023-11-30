@@ -1,8 +1,14 @@
 <script lang="ts">
     import Screen from "$lib/components/Screen.svelte";
+    import displayToLib from "../../displayToLib.json";
+
 
     export let choosenDisplay: string;
+    export let displays: typeof displayToLib;
     export let dropdownOpen: boolean = false;
+    export let setChoosenDisplay:(display:keyof typeof displayToLib)=>void;
+
+    let displayMap: [keyof typeof displayToLib] = Object.keys(displays) as [keyof typeof displayToLib]; //TODO: FIX this is wack
 
     function toggleDropdown() {
         dropdownOpen = !dropdownOpen;
@@ -21,7 +27,7 @@
     <!--Dropdown-->
     {#if dropdownOpen}
         <div
-            class="absolute top-[calc(100%+10px)] -left-2 w-[calc(100%+16px)] bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm"
+            class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm"
         >
             <search class="mb-2">
                 <input
@@ -31,18 +37,9 @@
                 />
             </search>
             <ul class="flex flex-col max-h-60 overflow-y-scroll">
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
-                <Screen />
+                {#each displayMap as display}
+                    <Screen name={display} details={displayToLib[display].details} library={displayToLib[display].lib}  onClick={()=>setChoosenDisplay(display)}/>
+                {/each}
             </ul>
         </div>
     {/if}
