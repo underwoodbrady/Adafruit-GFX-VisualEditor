@@ -12,7 +12,7 @@ class RoundRect extends CanvasOb {
     r: number; //Radius of Circle
 
     constructor(type: shapeType, x: number, y: number, w: number, h: number, r: number, color: HEX) {
-        super("circle", type, color);
+        super("round-rect", type, color);
         this.x = x;
         this.y = y;
         this.w = w;

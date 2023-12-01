@@ -78,38 +78,47 @@ let extractColors = (objects:CanvasOb[]) => {
 let convertObjectsToCode = (object: CanvasOb): string => {
     let returnString: string = "";
     let obj;
+    let color = colors[object.color]['label'];
     switch (object.shape) {
         case "circle":
             obj = (object as Circle); //Probably bad practice
-            if (object.type == 'fill') {
-                returnString = `lib.fillCircle(${obj.x}, ${obj.y}, ${obj.r}, ${colors[obj.color]['label']});`
+            if (object.type == 'fill') { //Can do inline '?' if statement instead (hurt readability?)
+                returnString = `lib.fillCircle(${obj.x}, ${obj.y}, ${obj.r}, ${color});`
             } else if (object.type = 'outline') {
-                returnString =`lib.drawCircle(${obj.x}, ${obj.y}, ${obj.r}, ${colors[obj.color]['label']});`
+                returnString =`lib.drawCircle(${obj.x}, ${obj.y}, ${obj.r}, ${color});`
             }
             break;
         case "rect":
             obj = (object as Rect); //Probably bad practice
             if (obj.type == 'fill') {
-                returnString = `lib.fillRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${colors[obj.color]['label']});`
+                returnString = `lib.fillRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${color});`
             } else if (obj.type = 'outline') {
-                returnString =`lib.drawRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${colors[obj.color]['label']});`
+                returnString =`lib.drawRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${color});`
             }
             break;
         case "triangle":
             obj = (object as Triangle); //Probably bad practice
-
+            if (obj.type == 'fill') {
+                returnString = `lib.fillTriangle(${obj.x1}, ${obj.y1}, ${obj.x2}, ${obj.y2},${obj.x3}, ${obj.y3}, ${color});`
+            } else if (obj.type = 'outline') {
+                returnString =`lib.drawTriangle(${obj.x1}, ${obj.y1}, ${obj.x2}, ${obj.y2},${obj.x3}, ${obj.y3}, ${color});`
+            }
             break;
         case "round-rect":
             obj = (object as RoundRect); //Probably bad practice
-
+            if (obj.type == 'fill') {
+                returnString = `lib.fillRoundRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${obj.r}, ${color});`
+            } else if (obj.type = 'outline') {
+                returnString =`lib.drawRoundRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${obj.r}, ${color});`
+            }
             break;
         case "line":
             obj = (object as Line); //Probably bad practice
-
+            returnString = `lib.drawLine(${obj.x1}, ${obj.y1}, ${obj.x2}, ${obj.y2}, ${color});`
             break;
         case "dot":
             obj = (object as Dot); //Probably bad practice
-
+            returnString = `lib.drawPixel(${obj.x}, ${obj.y}, ${color})`
             break;
     }
     console.log(returnString)
