@@ -56,7 +56,7 @@
                 >
             </div>
             <ul class="flex flex-col max-h-60 overflow-y-scroll">
-                {#each displayMap as display}
+                {#each displayMap as display (displayToLib[display].details)}
                     <Screen
                         name={display}
                         details={displayToLib[display].details}

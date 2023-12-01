@@ -22,18 +22,27 @@
     let canvasTrueWidth: number;
     let canvasTrueHeight: number;
 
-    //TODO: Add some logic on how much to scale based on true width
     let canvasScale: number = 1;
-    const canvasMaxScale: number = 5;
+    const canvasMaxScale: number = 6; // Sets max virtual display scaling the program can do
 
     let canvasDisplayedWidth: number;
     let canvasDisplayedHeight: number;
 
-    $: canvasDisplayedWidth = canvasTrueWidth * canvasScale;
-    $: canvasDisplayedHeight = canvasTrueHeight * canvasScale;
+    let thisWindow : Window;
 
-    //canvasTrueWidth = 128
-    //canvasTrueHeight= 64
+    const updateVariables = (canvasTrueWidth:number, canvasTrueHeight:number) =>{
+        if(!thisWindow) return
+        let screenWidth = thisWindow.innerWidth;
+        let xBuffer = 344;
+        let possibleSizes = Array.from({ length: canvasMaxScale },(value, index) => 1 + index * 1).filter((num)=>{
+            return num*canvasTrueWidth<screenWidth-xBuffer
+        })
+        canvasScale = possibleSizes.pop() || 1; //Get largest possible size or default to 1
+        canvasDisplayedHeight = canvasTrueHeight * canvasScale;
+        canvasDisplayedWidth = canvasTrueWidth * canvasScale;
+    }
+
+    $: updateVariables(canvasTrueWidth, canvasTrueHeight);
 
     let showCode: boolean = true;
     type generatingStages =
@@ -166,6 +175,7 @@
     onMount(() => {
         selectedTool = tools[0];
         selectedColor = colors[0];
+        thisWindow = window;
     });
 
     let displayDropdownOpen: boolean = false;
