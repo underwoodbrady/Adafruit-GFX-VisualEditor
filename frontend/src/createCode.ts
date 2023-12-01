@@ -9,6 +9,7 @@ import type Triangle from "./classes/shapes/Triangle";
 import type RoundRect from "./classes/shapes/RoundRect";
 import type Line from "./classes/shapes/Line";
 import type Dot from "./classes/shapes/Dot";
+import type Text from "./classes/shapes/Text";
 
 
 type display = keyof typeof displayToLib;
@@ -118,7 +119,13 @@ let convertObjectsToCode = (object: CanvasOb): string => {
             break;
         case "dot":
             obj = (object as Dot); //Probably bad practice
-            returnString = `lib.drawPixel(${obj.x}, ${obj.y}, ${color})`
+            returnString = `lib.drawPixel(${obj.x}, ${obj.y}, ${color});`
+            break;
+        case "text":
+                obj = (object as Text); //Probably bad practice
+                returnString = `lib.setCursor(${obj.x}, ${obj.y});
+    lib.setTextColor(${color});
+    lib.print("${obj.text}")`
             break;
     }
     console.log(returnString)
