@@ -30,7 +30,7 @@
 
     let thisWindow : Window;
 
-    const updateVariables = (canvasTrueWidth:number, canvasTrueHeight:number) =>{
+    const updateSizeVariables = (canvasTrueWidth:number, canvasTrueHeight:number) =>{
         if(!thisWindow) return
         let screenWidth = thisWindow.innerWidth;
         let xBuffer = 344;
@@ -42,7 +42,7 @@
         canvasDisplayedWidth = canvasTrueWidth * canvasScale;
     }
 
-    $: updateVariables(canvasTrueWidth, canvasTrueHeight);
+    $: updateSizeVariables(canvasTrueWidth, canvasTrueHeight);
 
     let showCode: boolean = true;
     type generatingStages =
@@ -163,8 +163,7 @@
 
     let generateCode = () => {
         createFullCode(
-            "" as keyof typeof displayToLib,
-            [""],
+            displayToLib[selectedDisplay].lib,
             [""],
             $objectListWritable,
         ).then((c) => {

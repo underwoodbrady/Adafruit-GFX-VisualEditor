@@ -1,10 +1,10 @@
 {
-    "0x0000": "BLACK",
-    "0x001F": "BLUE",
     "0xF800": "RED",
-    "0x07E0": "GREEN",
-    "0x07FF": "CYAN",
+    "0x1F": "BLUE",
+    "0x7E0": "GREEN",
+    "0x7FF": "CYAN",
     "0xF81F": "MAGENTA",
     "0xFFE0": "YELLOW",
+    "0x0": "BLACK",
     "0xFFFF": "WHITE"
 }

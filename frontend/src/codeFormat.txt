@@ -1,17 +1,16 @@
 #include <Adafruit_GFX.h>    // Core graphics library
 `Hardware-specific library import`
 `Custom font imports`
-
-// Color definitions - TODO: Only include colors that are used
+// Color definitions
 `Custom color definitions`
 
-lib = "INITIALIZE HARDWARE SPECIFIC LIBRARY HERE WITH CORRECT PINS"
+/*IMPORTANT: You must initialize the library yourself using correct pins*/
+`Hardware-specific library initialization`
 
-void displayOutput(lib) {
+void displayOutput() {
   `Code output from editor`
 }
  
 void setup(void) {    
-  /**START DISPLAY HERE**/
-  displayOutput(lib)
+  displayOutput()
 }

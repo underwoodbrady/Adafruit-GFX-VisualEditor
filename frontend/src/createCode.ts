@@ -1,6 +1,7 @@
 import codeFormat from "./codeFormat.txt";
 import codeONLYFormat from "./codeONLYFormat.txt";
-import displayToLib from "./displayToLib.json";
+import type displayToLib from "./displayToLib.json";
+import defaultLabelColors from "./defaultLabelColors.json";
 import type CanvasOb from "./classes/CanvasOb";
 import type Rect from "./classes/shapes/Rect";
 import type Circle from "./classes/shapes/Circle";
@@ -17,13 +18,60 @@ let optimizeObjects = (objects: CanvasOb[]) => {
 
 }
 
-//TODO: Maybe don't use displayToLib and instead store library in page.svelte and pass in
-let getDisplayLibrary = (display: display):string => {
-    return `<${displayToLib[display].lib}>` || "";
+/*
+Formatted:
+
+'hex':
+{
+    'rgb565',
+    'label',
+}
+*/
+
+//TODO: Create type
+let colors: any = {
+    
 }
 
-let convertColorsToCode = (color: string): string => {
- return ""
+let numColors = 0; //TODO: Could just use .length instead
+
+//The gift of chatgpt
+function convertHexToRGB565(hexColor:string) {
+    // Remove the '#' symbol from the hex color
+    hexColor = hexColor.replace('#', '');
+  
+    // Convert the hex color to RGB values
+    const r = parseInt(hexColor.substring(0, 2), 16);
+    const g = parseInt(hexColor.substring(2, 4), 16);
+    const b = parseInt(hexColor.substring(4, 6), 16);
+  
+    // Calculate the RGB565 value
+    const r5 = (r >> 3) & 0x1F;
+    const g6 = (g >> 2) & 0x3F;
+    const b5 = (b >> 3) & 0x1F;
+  
+    // Generate the RGB565 value in hexadecimal format
+    return '0x' + ((r5 << 11) | (g6 << 5) | b5).toString(16).toUpperCase();
+  }
+
+let extractColors = (objects:CanvasOb[]) => {
+    numColors = 0;
+    colors = {}
+    for(let x:number = 0, l:number = objects.length; x<l; x++){
+        let currentOb = objects[x]
+
+        if(colors[`${currentOb.color}`]) continue;
+
+        let currentRGB565 = convertHexToRGB565(currentOb.color);
+        let currentLabel =  defaultLabelColors[currentRGB565 as keyof typeof defaultLabelColors] || `CUSTOM${numColors}`;
+        numColors++;
+        
+        colors[`${currentOb.color}`] ={
+            'rgb565': `${currentRGB565}`,
+            'label' : `${currentLabel}`
+        };
+    }
+    console.log(colors);
 }
 
 //TODO: Convert object.color to format arduino can understand
@@ -34,17 +82,17 @@ let convertObjectsToCode = (object: CanvasOb): string => {
         case "circle":
             obj = (object as Circle); //Probably bad practice
             if (object.type == 'fill') {
-                returnString = `lib.fillCircle(${obj.x}, ${obj.y}, ${obj.r}, '${obj.color}');`
+                returnString = `lib.fillCircle(${obj.x}, ${obj.y}, ${obj.r}, ${colors[obj.color]['label']});`
             } else if (object.type = 'outline') {
-                returnString =`lib.drawCircle(${obj.x}, ${obj.y}, ${obj.r}, '${obj.color}');`
+                returnString =`lib.drawCircle(${obj.x}, ${obj.y}, ${obj.r}, ${colors[obj.color]['label']});`
             }
             break;
         case "rect":
             obj = (object as Rect); //Probably bad practice
             if (obj.type == 'fill') {
-                returnString = `lib.fillRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, '${obj.color}');`
+                returnString = `lib.fillRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${colors[obj.color]['label']});`
             } else if (obj.type = 'outline') {
-                returnString =`lib.drawRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, '${obj.color}');`
+                returnString =`lib.drawRect(${obj.x}, ${obj.y}, ${obj.w}, ${obj.h}, ${colors[obj.color]['label']});`
             }
             break;
         case "triangle":
@@ -68,7 +116,7 @@ let convertObjectsToCode = (object: CanvasOb): string => {
     return `    ${returnString}`;
 }
 
-export const createFullCode = async (display: display, customFontImports: string[], customColorDefinitions: string[], objectList: CanvasOb[]) => {
+export const createFullCode = async (displayLib: string, customFontImports: string[], objectList: CanvasOb[]) => {
     let newLines:string[] = [];
     await fetch(codeFormat)
         .then((response) => response.text())
@@ -80,18 +128,20 @@ export const createFullCode = async (display: display, customFontImports: string
                 if (line.includes("`")) {
                     switch (injected) {
                         case 0:
-                            const displayLib = getDisplayLibrary(display);
-                            line = displayLib || "//TODO: Add specific library import"
+                            line = `#include <${displayLib}> //Display specific library`
                             break;
                         case 1:
-                            line = "//TODO: Add specific font imports"
+                            //TODO: Add specific font imports
+                            line = ""
                             break;
                         case 2:
-                            if (customColorDefinitions)
-                                line = customColorDefinitions.join('\n');
-                            else line = ""
+                            extractColors(objectList)
+                            line = (Object.keys(colors).map((color:any) => `#define ${colors[color]['label']}    ${colors[color]['rgb565']}`)).join("\n")
                             break;
                         case 3:
+                            line = `${displayLib.slice(0,-2)} lib = ${displayLib.slice(0,-2)}('PINS HERE');`
+                            break;
+                        case 4:
                             line = (objectList.map((object) => convertObjectsToCode(object))).join("\n")
                             break;
                         default:
