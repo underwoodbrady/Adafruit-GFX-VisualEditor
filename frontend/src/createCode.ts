@@ -144,7 +144,7 @@ export const createFullCode = async (displayLib: string, customFontImports: stri
                 if (line.includes("`")) {
                     switch (injected) {
                         case 0:
-                            line = `#include <${displayLib}> //Display specific library`
+                            line = `#include <${displayLib}> // Display specific library`
                             break;
                         case 1:
                             //TODO: Add specific font imports

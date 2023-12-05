@@ -18,6 +18,7 @@
     import { createFullCode } from "../createCode";
     import displayToLib from "../displayToLib.json";
     import Tooltip from "$lib/components/Tooltip.svelte";
+    import ConfirmationModal from "$lib/containers/ConfirmationModal.svelte";
 
     let canvasTrueWidth: number;
     let canvasTrueHeight: number;
@@ -151,15 +152,27 @@
     let selectedTool: { name: string; image: string };
     let selectedColor: HEX;
 
+    let hideConfirmationModal = () =>{
+        displayConfirmationModal = false
+    }
+
     //Unify arrow functions vs traditional
     let setChoosenDisplay = (display: keyof typeof displayToLib) => {
+        if ($objectListWritable.length==0){
+            confirmChoosenDisplay(display);
+            return
+        }
+        tempSelectedDisplay = display;
+        displayConfirmationModal = true
+    };
+
+    let confirmChoosenDisplay = (display: keyof typeof displayToLib) => {
         selectedDisplay = display;
         objectListWritable.set([]);
         canvasTrueWidth = Number(displayToLib[display].res.split("x")[0]);
         canvasTrueHeight = Number(displayToLib[display].res.split("x")[1]);
-        // canvasDisplayedWidth = canvasTrueWidth * canvasScale;
-        // canvasDisplayedHeight = canvasTrueHeight * canvasScale;
-    };
+        hideConfirmationModal();
+    }
 
     let generateCode = () => {
         createFullCode(
@@ -178,6 +191,10 @@
     });
 
     let displayDropdownOpen: boolean = false;
+    let tempSelectedDisplay: keyof typeof displayToLib;
+    let displayConfirmationModal: boolean = false;
+    let confirmationModalTitle: string;
+    let confirmationModalText: string;
 </script>
 
 <svelte:head>
@@ -283,7 +300,7 @@
                         class="h-4 mt-[2px] opacity-40"
                     />
                     <p class="text-black/40">
-                        <a class="text-blue-500/40 underline" href="">Upload</a>
+                        <a class="text-blue-500/40 underline" href="/">Upload</a>
                         previous code
                     </p>
                     <div
@@ -353,4 +370,7 @@
         </section>
     {/if}
 </main>
+{#if displayConfirmationModal}
+<ConfirmationModal title="Are you sure you want to continue?" text="Switching displays will clear the canvas" onPressCancel={hideConfirmationModal} onPressAction={()=>confirmChoosenDisplay(tempSelectedDisplay)}/> 
+{/if}
 <footer />

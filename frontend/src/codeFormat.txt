@@ -1,10 +1,10 @@
-#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_GFX.h> // Core graphics library
 `Hardware-specific library import`
 `Custom font imports`
-// Color definitions
+/* Color definitions */
 `Custom color definitions`
 
-/*IMPORTANT: You must initialize the library yourself using correct pins*/
+/* IMPORTANT: You must initialize the library yourself using correct pins */
 `Hardware-specific library initialization`
 
 void displayOutput() {
