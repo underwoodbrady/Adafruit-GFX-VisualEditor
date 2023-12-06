@@ -7,8 +7,8 @@
 
 <button
     on:click={onClick}
-    class={"px-4 h-9 flex items-center font-semibold text-sm space-x-2 drop-shadow-sm " +
-        (filled ? "border-2 border-neutral-900 bg-neutral-900 text-white" : " border-2 border-neutral-900")}
+    class={"px-4 h-9 flex items-center font-semibold text-sm space-x-2 drop-shadow-sm border-neutral-900 duration-75" +
+        (filled ? " border-2 bg-neutral-900 text-white hover:bg-neutral-800 hover:border-neutral-600 " : " border-2 hover:bg-white/20 hover:border-neutral-600")}
 >
     {#if !(icon == "")}
         <img src={icon} alt="Button Icon" class="h-4" />
