@@ -169,7 +169,13 @@
         "#",
     ];
 
-    let selectedDisplay: keyof typeof displayToLib;
+    let selectedDisplay: keyof typeof displayToLib | undefined;
+    let customDisplay: {
+        width: number;
+        height: number;
+        library: string;
+    };
+    let selectedLibrary: string;
     let selectedTool: { name: string; image: string };
     let selectedColor: HEX;
 
@@ -194,8 +200,19 @@
         displayConfirmationModal = true;
     };
 
+    let setCustomDisplay = (display: typeof customDisplay) => {
+        selectedDisplay = undefined;
+        customDisplay = display;
+        selectedLibrary = `Adafruit_${display.library}.h`; //TODO: Do better
+        objectListWritable.set([]);
+        canvasTrueWidth = display.width;
+        canvasTrueHeight = display.height;
+        hideConfirmationModal();
+    };
+
     let confirmChoosenDisplay = (display: keyof typeof displayToLib) => {
         selectedDisplay = display;
+        selectedLibrary = displayToLib[selectedDisplay].lib
         objectListWritable.set([]);
         canvasTrueWidth = Number(displayToLib[display].res.split("x")[0]);
         canvasTrueHeight = Number(displayToLib[display].res.split("x")[1]);
@@ -204,22 +221,22 @@
 
     let codeFile: any = null;
 
-    let showCopied:boolean = false;
+    let showCopied: boolean = false;
 
     let onPressCopy = () => {
-        if(showCopied) return
+        if (showCopied) return;
         navigator.clipboard.writeText(code);
         showCopied = true;
-        let timeOut = setTimeout(()=>{
-            showCopied = false;  
-            clearTimeout(timeOut)
-        },2000)
+        let timeOut = setTimeout(() => {
+            showCopied = false;
+            clearTimeout(timeOut);
+        }, 2000);
     };
 
     let generateCode = () => {
         currentStage = 0;
         createFullCode(
-            displayToLib[selectedDisplay].lib,
+            selectedLibrary,
             [""],
             $objectListWritable,
         ).then((c) => {
@@ -264,6 +281,7 @@
     displays={displayToLib}
     choosenDisplay={selectedDisplay}
     {setChoosenDisplay}
+    {setCustomDisplay}
     dropdownOpen={displayDropdownOpen}
 />
 <main
@@ -290,7 +308,7 @@
             text="Generate"
             onClick={generateCode}
             filled
-            loading={currentStage > 0 && currentStage<3}
+            loading={currentStage > 0 && currentStage < 3}
         />
     </section>
     <section class="relative">
@@ -422,8 +440,12 @@
             <div class="flex items-center space-x-4">
                 <div class="relative">
                     <IconButton onClick={onPressCopy} icon="/copy.svg" />
-                    <div class={showCopied ? "absolute -top-4 left-1/2 -translate-x-1/2" : "hidden"}>
-                        <TooltipTop text="Copied!"/>
+                    <div
+                        class={showCopied
+                            ? "absolute -top-4 left-1/2 -translate-x-1/2"
+                            : "hidden"}
+                    >
+                        <TooltipTop text="Copied!" />
                     </div>
                 </div>
                 <a

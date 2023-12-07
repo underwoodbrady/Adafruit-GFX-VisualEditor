@@ -3,6 +3,11 @@
     import ScreenDropdown from "./ScreenDropdown.svelte";
     import type displayToLib from "../../displayToLib.json";
     export let setChoosenDisplay:(display:keyof typeof displayToLib)=>void;
+    export let setCustomDisplay: (display: {
+        width:number,
+        height:number,
+        library:string
+    }) => void = () => {};
 
     export let choosenDisplay: string = "Select Display";
     export let displays: typeof displayToLib;
@@ -19,7 +24,7 @@
     <nav>
         <ul class="flex items-center space-x-6">
             <li>
-               <ScreenDropdown {choosenDisplay} {displays} {setChoosenDisplay} {dropdownOpen}/>
+               <ScreenDropdown {choosenDisplay} {displays} {setChoosenDisplay} {setCustomDisplay} {dropdownOpen}/>
             </li>
             <li class="flex items-center space-x-2 relative group">
                 <img
