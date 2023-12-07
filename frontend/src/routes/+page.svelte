@@ -290,6 +290,7 @@
             text="Generate"
             onClick={generateCode}
             filled
+            loading={currentStage > 0 && currentStage<3}
         />
     </section>
     <section class="relative">
