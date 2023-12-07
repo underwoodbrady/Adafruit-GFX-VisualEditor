@@ -30,7 +30,9 @@
 
     let cellList: Cell[][] = [];
     let objectList: CanvasOb[] = [];
-    let objectStates: (typeof objectList)[] = []; //For undo feature
+    let objectStates: CanvasOb[] = []; //For undo feature (TODO: Expand to multiple (just undo one ob for now))
+
+    /*Implement queue with max length of some number?*/
 
     let getMousePositions = (
         e: MouseEvent
@@ -59,6 +61,7 @@
     };
 
     let addNewObject = (newObject: CanvasOb) => {
+        objectStates = objectList
         objectList.push(newObject);
         objectListWritable.set(objectList);
         mapObjectToCells(newObject);
