@@ -1,7 +1,7 @@
 ![Visual Editor Logo](https://i.imgur.com/4x2mvKa.png)
 
 <p align="center">
-  <img src="https://img.shields.io/github/release/chartjs/Chart.js.svg?style=flat-square&maxAge=600" alt="Downloads">
+  <img src="https://img.shields.io/github/v/release/underwoodbrady/Adafruit-GFX-VisualEditor?style=flat-square&cacheSeconds=600" alt="Downloads">
 </p>
 
 <h1 align="center">Visual Graphics to Arduino Sketches</h1>
