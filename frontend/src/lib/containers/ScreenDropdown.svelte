@@ -56,7 +56,7 @@
     <!--Dropdown-->
     {#if dropdownOpen}
         <div
-            class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm scale-y-0 origin-top drop-down-anim"
+            class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm"
         >
             {#if customDisplay}
                 <div class="p-1">
@@ -199,14 +199,14 @@
         border-radius: 2px;
     }
 
-	.drop-down-anim {
+	/* .drop-down-anim {
 		animation-name: drop-down;
 		animation-duration: 0.2s;
 		animation-direction: normal;
 		animation-timing-function:ease;
 		animation-iteration-count: 1;
 		animation-fill-mode: forwards;
-	}
+	} */
 
 	@keyframes drop-down {
 		0% {
