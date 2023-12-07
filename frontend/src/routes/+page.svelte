@@ -1,4 +1,5 @@
 <script lang="ts">
+    /*Component Imports*/
     import IconButton from "$lib/components/IconButton.svelte";
     import TextButton from "$lib/components/TextButton.svelte";
     import Canvas from "$lib/containers/Canvas.svelte";
@@ -6,19 +7,25 @@
     import Header from "$lib/containers/Header.svelte";
     import PropertiesPanel from "$lib/containers/PropertiesPanel.svelte";
     import ToolSelector from "$lib/containers/ToolSelector.svelte";
+    import Tooltip from "$lib/components/Tooltip.svelte";
+    import TooltipTop from "$lib/components/TooltipTop.svelte";
+    import ConfirmationModal from "$lib/containers/ConfirmationModal.svelte";
+
+    //Svelte Imports
     import {
         objectListWritable,
         selectedObject,
     } from "$lib/containers/objectList";
     import { onMount } from "svelte";
 
+    //Code Library Imports
     import Highlight, { LineNumbers } from "svelte-highlight";
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
+
+    //Utility Imports
     import { createFullCode } from "../createCode";
     import displayToLib from "../displayToLib.json";
-    import Tooltip from "$lib/components/Tooltip.svelte";
-    import ConfirmationModal from "$lib/containers/ConfirmationModal.svelte";
 
     let canvasTrueWidth: number;
     let canvasTrueHeight: number;
@@ -29,36 +36,50 @@
     let canvasDisplayedWidth: number;
     let canvasDisplayedHeight: number;
 
-    let thisWindow : Window;
+    let thisWindow: Window;
 
-    const updateSizeVariables = (canvasTrueWidth:number, canvasTrueHeight:number) =>{
-        if(!thisWindow) return
+    const updateSizeVariables = (
+        canvasTrueWidth: number,
+        canvasTrueHeight: number,
+    ) => {
+        if (!thisWindow) return;
         let screenWidth = thisWindow.innerWidth;
         let xBuffer = 344;
-        let possibleSizes = Array.from({ length: canvasMaxScale },(value, index) => 1 + index * 1).filter((num)=>{
-            return num*canvasTrueWidth<screenWidth-xBuffer
-        })
+        let possibleSizes = Array.from(
+            { length: canvasMaxScale },
+            (value, index) => 1 + index * 1,
+        ).filter((num) => {
+            return num * canvasTrueWidth < screenWidth - xBuffer;
+        });
         canvasScale = possibleSizes.pop() || 1; //Get largest possible size or default to 1
         canvasDisplayedHeight = canvasTrueHeight * canvasScale;
         canvasDisplayedWidth = canvasTrueWidth * canvasScale;
-    }
+    };
 
     $: updateSizeVariables(canvasTrueWidth, canvasTrueHeight);
 
-    let showCode: boolean = true;
+    let showCode: boolean = false;
+
     type generatingStages =
         | "Generating"
         | "Optimizing"
         | "Compiling"
         | "Done"
         | "Error";
+
     let allHappyPathStages: generatingStages[] = [
         "Generating",
         "Optimizing",
         "Compiling",
         "Done",
     ];
-    let currentStage: generatingStages = allHappyPathStages[0];
+
+    let currentStage: number = 0;
+
+    let currentCodeAnimStage: generatingStages =
+        allHappyPathStages[currentStage];
+    $: currentCodeAnimStage = allHappyPathStages[currentStage];
+
     let code: string = ``;
 
     let tools = [
@@ -152,18 +173,25 @@
     let selectedTool: { name: string; image: string };
     let selectedColor: HEX;
 
-    let hideConfirmationModal = () =>{
-        displayConfirmationModal = false
-    }
+    let displayDropdownOpen: boolean = false;
+    let tempSelectedDisplay: keyof typeof displayToLib;
+    let displayConfirmationModal: boolean = false;
+    let confirmationModalTitle: string;
+    let confirmationModalText: string;
+    let codeSection: HTMLElement;
 
-    //Unify arrow functions vs traditional
+    let hideConfirmationModal = () => {
+        displayConfirmationModal = false;
+    };
+
+    //TODO: Unify arrow functions vs traditional
     let setChoosenDisplay = (display: keyof typeof displayToLib) => {
-        if ($objectListWritable.length==0){
+        if ($objectListWritable.length == 0) {
             confirmChoosenDisplay(display);
-            return
+            return;
         }
         tempSelectedDisplay = display;
-        displayConfirmationModal = true
+        displayConfirmationModal = true;
     };
 
     let confirmChoosenDisplay = (display: keyof typeof displayToLib) => {
@@ -172,16 +200,53 @@
         canvasTrueWidth = Number(displayToLib[display].res.split("x")[0]);
         canvasTrueHeight = Number(displayToLib[display].res.split("x")[1]);
         hideConfirmationModal();
-    }
+    };
+
+    let codeFile: any = null;
+
+    let showCopied:boolean = false;
+
+    let onPressCopy = () => {
+        if(showCopied) return
+        navigator.clipboard.writeText(code);
+        showCopied = true;
+        let timeOut = setTimeout(()=>{
+            showCopied = false;  
+            clearTimeout(timeOut)
+        },2000)
+    };
 
     let generateCode = () => {
+        currentStage = 0;
         createFullCode(
             displayToLib[selectedDisplay].lib,
             [""],
             $objectListWritable,
         ).then((c) => {
             code = c;
+            const data = new Blob([code], { type: "text/plain" }); //Creates text file with each word on its own line
+
+            if (codeFile !== null)
+                //Prevents memory leaks
+                window.URL.revokeObjectURL(codeFile);
+
+            codeFile = window.URL.createObjectURL(data);
         });
+
+        showCode = true;
+        /*TODO: Improve animation to be more realistic - also a lot of this code is dogshit*/
+        let codegenAnim = setInterval(() => {
+            if (currentStage == 1)
+                codeSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            if (currentStage >= allHappyPathStages.length - 1) {
+                clearInterval(codegenAnim);
+                return;
+            }
+            currentStage += 1;
+        }, 300);
     };
 
     onMount(() => {
@@ -189,12 +254,6 @@
         selectedColor = colors[0];
         thisWindow = window;
     });
-
-    let displayDropdownOpen: boolean = false;
-    let tempSelectedDisplay: keyof typeof displayToLib;
-    let displayConfirmationModal: boolean = false;
-    let confirmationModalTitle: string;
-    let confirmationModalText: string;
 </script>
 
 <svelte:head>
@@ -221,6 +280,8 @@
             text="Clear"
             onClick={() => {
                 objectListWritable.set([]);
+                showCode = false;
+                code = "";
             }}
         />
         <IconButton icon="/gear.svg" onClick={() => {}} filled />
@@ -300,7 +361,8 @@
                         class="h-4 mt-[2px] opacity-40"
                     />
                     <p class="text-black/40">
-                        <a class="text-blue-500/40 underline" href="/">Upload</a>
+                        <a class="text-blue-500/40 underline" href="/">Upload</a
+                        >
                         previous code
                     </p>
                     <div
@@ -332,45 +394,59 @@
             }}
         />
     </section>
-    {#if showCode}
-        <section class="py-6 flex-col space-y-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <p class="font-semibold">{currentStage}</p>
-                    {#if currentStage == "Done"}
-                        <img src="/check.svg" alt="Check Mark" class="h-6" />
-                    {:else if currentStage == "Error"}
-                        <img
-                            src="/spinner.svg"
-                            alt="Spinner"
-                            class="animate-spin h-4"
-                        />
-                    {:else}
-                        <img
-                            src="/spinner.svg"
-                            alt="Spinner"
-                            class="animate-spin h-4"
-                        />
-                    {/if}
-                </div>
-                <div class="flex items-center space-x-4">
-                    <IconButton onClick={() => {}} icon="/copy.svg" />
-                    <IconButton
-                        onClick={() => {}}
-                        icon="/download.svg"
-                        filled
+
+    <section
+        class={showCode ? "py-6 flex-col space-y-4" : "hidden"}
+        bind:this={codeSection}
+    >
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <p class="font-semibold">{currentCodeAnimStage}</p>
+                {#if currentCodeAnimStage == "Done"}
+                    <img src="/check.svg" alt="Check Mark" class="h-6" />
+                {:else if currentCodeAnimStage == "Error"}
+                    <img
+                        src="/spinner.svg"
+                        alt="Spinner"
+                        class="animate-spin h-4"
                     />
+                {:else}
+                    <img
+                        src="/spinner.svg"
+                        alt="Spinner"
+                        class="animate-spin h-4"
+                    />
+                {/if}
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <IconButton onClick={onPressCopy} icon="/copy.svg" />
+                    <div class={showCopied ? "absolute -top-4 left-1/2 -translate-x-1/2" : "hidden"}>
+                        <TooltipTop text="Copied!"/>
+                    </div>
                 </div>
+                <a
+                    href={codeFile}
+                    download="GFXSketch.ino"
+                    class="w-9 h-9 flex items-center justify-center drop-shadow-sm border-neutral-900 duration-75 border-2 bg-neutral-900 hover:bg-neutral-800 hover:border-neutral-600"
+                >
+                    <img src="/download.svg" alt="Button Icon" class="h-4" />
+                </a>
             </div>
-            <div class="w-full border-neutral-900 border-2 text-sm rounded-sm">
-                <Highlight language={arduino} let:highlighted {code}>
-                    <LineNumbers {highlighted} wrapLines />
-                </Highlight>
-            </div>
-        </section>
-    {/if}
+        </div>
+        <div class="w-full border-neutral-900 border-2 text-sm rounded-sm">
+            <Highlight language={arduino} let:highlighted {code}>
+                <LineNumbers {highlighted} wrapLines />
+            </Highlight>
+        </div>
+    </section>
 </main>
 {#if displayConfirmationModal}
-<ConfirmationModal title="Are you sure you want to continue?" text="Switching displays will clear the canvas" onPressCancel={hideConfirmationModal} onPressAction={()=>confirmChoosenDisplay(tempSelectedDisplay)}/> 
+    <ConfirmationModal
+        title="Are you sure you want to continue?"
+        text="Switching displays will clear the canvas"
+        onPressCancel={hideConfirmationModal}
+        onPressAction={() => confirmChoosenDisplay(tempSelectedDisplay)}
+    />
 {/if}
 <footer />
