@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/underwoodbrady/Adafruit-GFX-VisualEditor?style=flat-square&cacheSeconds=600" alt="Version">
-  <img src="https://img.shields.io/website?url=https%3A%2F%2Fwww.gfxvisual.com%2F" alt="Website Status">
+  <img src="https://img.shields.io/website?url=https%3A%2F%2Fwww.gfxvisual.com%2F&style=flat-square&link=https%3A%2F%2Fwww.gfxvisual.com%2F" alt="Website Status">
 </p>
 
 <h1 align="center">Visual Graphics to Arduino Sketches</h1>
