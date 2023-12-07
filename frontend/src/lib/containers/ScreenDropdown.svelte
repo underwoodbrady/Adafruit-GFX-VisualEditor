@@ -47,16 +47,16 @@
 <div class="relative">
     <button
         on:click={toggleDropdown}
-        class="flex items-center space-x-2 cursor-pointer hover:bg-neutral-200 duration-75 p-2 -m-2"
+        class="flex items-center space-x-2 cursor-pointer hover:bg-neutral-200 rounded-sm duration-75 p-2 -m-2"
     >
         <img src="/display.svg" alt="Display" class="h-[15px] mt-[2px]" />
         <p class="font-semibold text-sm">{choosenDisplay}</p>
-        <img src="/down-arrow.svg" alt="Down Arrow" class="w-2 mt-[2px]" />
+        <img src="/down-arrow.svg" alt="Down Arrow" class={ dropdownOpen ? "w-2 mt-[2px] duration-75 rotate-180" : "w-2 mt-[2px] duration-75"} />
     </button>
     <!--Dropdown-->
     {#if dropdownOpen}
         <div
-            class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm"
+            class="absolute top-[calc(100%+10px)] -left-2 w-64 bg-neutral-300 p-2 border-b border-r border-l border-neutral-400 drop-shadow-sm scale-y-0 origin-top drop-down-anim"
         >
             {#if customDisplay}
                 <div class="p-1">
@@ -142,7 +142,7 @@
             {:else}
                 <div class="flex space-x-2 items-center mb-2">
                     <search
-                        class="relative max-w-full h-8 w-40 bg-neutral-200 flex items-center"
+                        class="relative max-w-full h-7 w-40 bg-neutral-200 flex items-center"
                         on:input={filterDisplayMap}
                     >
                         <input
@@ -198,4 +198,22 @@
         background: rgb(167, 167, 167);
         border-radius: 2px;
     }
+
+	.drop-down-anim {
+		animation-name: drop-down;
+		animation-duration: 0.2s;
+		animation-direction: normal;
+		animation-timing-function:ease;
+		animation-iteration-count: 1;
+		animation-fill-mode: forwards;
+	}
+
+	@keyframes drop-down {
+		0% {
+			transform: scaleY(0);
+		}
+		100% {
+			transform: scaleY(100%);
+		}
+	}
 </style>

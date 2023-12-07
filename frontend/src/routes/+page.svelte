@@ -279,7 +279,7 @@
 
 <Header
     displays={displayToLib}
-    choosenDisplay={selectedDisplay}
+    choosenDisplay={selectedDisplay || (customDisplay?.width ? (`Custom ${customDisplay?.width}x${customDisplay?.height}`) : undefined)}
     {setChoosenDisplay}
     {setCustomDisplay}
     dropdownOpen={displayDropdownOpen}
