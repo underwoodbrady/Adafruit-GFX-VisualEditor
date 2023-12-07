@@ -35,7 +35,7 @@
     /*Implement queue with max length of some number?*/
 
     let getMousePositions = (
-        e: MouseEvent
+        e: MouseEvent,
     ): { mouseX: number; mouseY: number } => {
         return {
             mouseX: e.clientX - canvasBoundingRect.left,
@@ -54,14 +54,14 @@
         const { mouseX, mouseY } = getMousePositions(e);
         startingMouseX = mouseX;
         startingMouseY = mouseY;
-        if (selectedTool.name == "paint-brush"){
+        if (selectedTool.name == "paint-brush") {
             mouseMove(e);
             canvas.onmousemove = (e) => mouseMove(e);
         }
     };
 
     let addNewObject = (newObject: CanvasOb) => {
-        objectStates = objectList
+        objectStates = objectList; // TODO: Update
         objectList.push(newObject);
         objectListWritable.set(objectList);
         mapObjectToCells(newObject);
@@ -80,7 +80,7 @@
         let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
 
         let widthHeightToRadius = Math.min(
-            Math.max(Math.round(cellWidth / 2), Math.round(cellHeight / 2))
+            Math.max(Math.round(cellWidth / 2), Math.round(cellHeight / 2)),
         ); //TODO: Add boundry checking to prevent overflow
 
         let ob;
@@ -106,7 +106,7 @@
                     cellY,
                     cellWidth,
                     cellHeight,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "rect-closed":
@@ -116,7 +116,7 @@
                     cellY,
                     cellWidth,
                     cellHeight,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "round-rect-open":
@@ -126,8 +126,8 @@
                     cellY,
                     cellWidth,
                     cellHeight,
-                    Math.round(Math.min(cellWidth,cellHeight)/8),
-                    selectedColor
+                    Math.round(Math.min(cellWidth, cellHeight) / 8),
+                    selectedColor,
                 );
                 break;
             case "round-rect-closed":
@@ -137,8 +137,8 @@
                     cellY,
                     cellWidth,
                     cellHeight,
-                    Math.round(Math.min(cellWidth,cellHeight)/8),
-                    selectedColor
+                    Math.round(Math.min(cellWidth, cellHeight) / 8),
+                    selectedColor,
                 );
                 break;
             case "circle-open":
@@ -147,7 +147,7 @@
                     cellX + widthHeightToRadius,
                     cellY + widthHeightToRadius,
                     widthHeightToRadius,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "circle-closed":
@@ -156,7 +156,7 @@
                     cellX + widthHeightToRadius,
                     cellY + widthHeightToRadius,
                     widthHeightToRadius,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "tri-open":
@@ -168,7 +168,7 @@
                     cellY + cellHeight,
                     cellX + cellWidth,
                     cellY + cellHeight,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "tri-closed":
@@ -180,7 +180,7 @@
                     cellY + cellHeight,
                     cellX + cellWidth,
                     cellY + cellHeight,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "line":
@@ -190,7 +190,7 @@
                     cellY,
                     cellX + cellWidth,
                     cellY + cellHeight,
-                    selectedColor
+                    selectedColor,
                 );
                 break;
             case "heart-closed":
@@ -198,9 +198,9 @@
                     "fill",
                     cellX,
                     cellY,
-                    widthHeightToRadius*2,
-                    widthHeightToRadius*2,
-                    selectedColor
+                    widthHeightToRadius * 2,
+                    widthHeightToRadius * 2,
+                    selectedColor,
                 );
                 break;
             case "cursor":
@@ -216,15 +216,19 @@
                 if (!(ob == undefined)) {
                     ob.color = selectedColor;
                     fullRedraw(); //TODO: Make more efficient
-                }else{
+                } else {
                     newObject = new Rect(
-                    "fill",
-                    0,
-                    0,
-                    canvasDisplayedWidth/canvasScale-1,
-                    canvasDisplayedHeight/canvasScale-1,
-                    selectedColor
-                );
+                        "fill",
+                        0,
+                        0,
+                        canvasDisplayedWidth / canvasScale - 1,
+                        canvasDisplayedHeight / canvasScale - 1,
+                        selectedColor,
+                    );
+                    objectList.unshift(newObject);
+                    objectListWritable.set(objectList);
+                    fullRedraw();
+                    return; //Don't do normal addNewObject call
                 }
                 break;
             default:
@@ -239,7 +243,7 @@
             "outline",
             Math.round(mouseX / canvasScale),
             Math.round(mouseY / canvasScale),
-            selectedColor
+            selectedColor,
         );
         if (newObject) addNewObject(newObject);
     };
@@ -390,10 +394,10 @@
         });
     });
 
-    afterUpdate(()=>{
-        console.log($objectListWritable)
-        if (!ctx) return //Don't run on mount
-        if ($objectListWritable.length > 0) return //Don't run if there are objects
+    afterUpdate(() => {
+        console.log($objectListWritable);
+        if (!ctx) return; //Don't run on mount
+        if ($objectListWritable.length > 0) return; //Don't run if there are objects
 
         console.log("switched displays");
         const res = canvas.getContext("2d");
@@ -406,7 +410,7 @@
         updateCanvasBoundingRect(canvas);
         cellList = [];
         createCells();
-    })
+    });
 </script>
 
 <canvas
