@@ -89,7 +89,6 @@
     };
 
     let checkedObjectsDelete = () => {
-        console.log(checkedObjects);
         objectListWritable.update((currentVal) =>
             currentVal.filter((object) => !checkedObjects.includes(object)),
         );
@@ -98,11 +97,23 @@
     //TODO: see if there is a faster way
     let checkedObjectsMove = (moveUp: boolean) => {
         let newObList = [...$objectListWritable];
+        checkedObjects.sort((ob1, ob2) => { //Corrects order of operations on movement (if going up the higher object moves first and visa versa)
+            if (newObList.indexOf(ob1) > newObList.indexOf(ob2))
+                return moveUp ? -1 : 1;
+            if (newObList.indexOf(ob1) < newObList.indexOf(ob2))
+                return moveUp ? 1 : -1;
+            return 0;
+        });
         for (let i: number = 0, e: number = checkedObjects.length; i < e; i++) {
             const currentCheckedOb = checkedObjects[i],
                 currentCheckedObIndex = newObList.indexOf(currentCheckedOb);
 
-            if (moveUp && currentCheckedObIndex + 1 == $objectListWritable.length || !moveUp && currentCheckedObIndex == 0) return; //Can't move up if already at top
+            if (
+                (moveUp &&
+                    currentCheckedObIndex + 1 == $objectListWritable.length) ||
+                (!moveUp && currentCheckedObIndex == 0)
+            )
+                return; //Can't move up if already at top
 
             let newObIndex = currentCheckedObIndex + (moveUp ? 1 : -1);
 
@@ -114,7 +125,6 @@
                 ...newObList.slice(newObIndex),
             ]; //Paste in new object at new index
         }
-        console.log(newObList);
         objectListWritable.set(newObList);
     };
 
