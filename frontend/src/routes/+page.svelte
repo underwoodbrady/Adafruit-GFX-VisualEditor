@@ -393,7 +393,7 @@
             </div>
         {/if}
         <div
-            class="absolute -right-44 top-0 w-40 min-h-full bg-neutral-300 border-2 border-black p-4 flex rounded-sm"
+            class="absolute -right-48 top-0 w-44 min-h-full bg-neutral-300 border-2 border-black p-4 flex rounded-sm"
         >
             <!--Properties-->
             <PropertiesPanel

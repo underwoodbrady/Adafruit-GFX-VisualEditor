@@ -3,6 +3,7 @@
     import type CanvasOb from "../../classes/CanvasOb";
     import { canvasRedraws, objectListWritable } from "./objectList";
     import type Text from "../../classes/shapes/Text";
+    import IconButton from "$lib/components/IconButton.svelte";
 
     export let selectedObject: CanvasOb | undefined;
     export let canvasTrueWidth: number;
@@ -13,6 +14,10 @@
     let selectedColor: HTMLInputElement;
 
     let textInput: HTMLInputElement;
+
+    type menus = "properties" | "layers";
+
+    let selectedMenu: menus = "properties";
 
     //TODO: Make this actually work
     let checkCanvasBoundries = (
@@ -37,6 +42,7 @@
 
     //These functions are so ugly don't look... Honestly shocking they work
     let numberChanged = (change: any, key: objectKeys) => {
+        if (selectedObject == undefined) return;
         console.log((change.target as HTMLInputElement).value);
         let so = selectedObject;
         so[key] = Number((change.target as HTMLInputElement).value);
@@ -72,9 +78,27 @@
         // objectListWritable.set(newObjList);
     };
 
+    let selectedObjects:CanvasOb[] = [];
+
+    let objectChecked = (object:CanvasOb, checked:boolean) => {
+        if (checked){
+            selectedObjects.push(object)
+            return
+        }
+        selectedObjects.splice(selectedObjects.indexOf(object),1);
+
+    }
+
+    let checkedObjectsDelete = () => {
+        console.log(selectedObjects)
+        objectListWritable.update((currentVal) =>
+            currentVal.filter((object)=>!(selectedObjects.includes(object)),
+        ));
+    }
+
     afterUpdate(() => {
         if (selectedObject) {
-            if (selectedObject.shape == "text") {
+            if (selectedObject.shape == "text" && textInput) {
                 textInput.value = (selectedObject as Text).text;
                 textInput.focus();
             }
@@ -83,108 +107,173 @@
 </script>
 
 <section class="flex flex-col space-y-2 min-h-full w-full">
-    <div class="flex space-x-2 items-center">
-        <img src="/properties.svg" alt="Properties Icon" class="w-4" />
-        <p class="text-sm font-semibold">Properties</p>
+    <div class="-m-4 mb-2 flex">
+        <button
+            class={"flex flex-1 space-x-2 justify-center items-center p-2  " +
+                (selectedMenu == "properties"
+                    ? " "
+                    : " bg-neutral-400 border-b border-r border-neutral-500 shadow-inner")}
+            on:click={() => (selectedMenu = "properties")}
+        >
+            <img src="/properties.svg" alt="Properties Icon" class="w-3" />
+            <p class="text-xs font-semibold">Properties</p>
+        </button>
+        <button
+            class={"flex space-x-2 justify-center items-center p-2  " +
+                (selectedMenu == "layers"
+                    ? " "
+                    : " bg-neutral-400 border-b border-l border-neutral-500 shadow-inner")}
+            on:click={() => {
+                selectedMenu = "layers"
+                selectedObjects = []
+            }}
+        >
+            <img src="/layers.svg" alt="Properties Icon" class="w-3" />
+            <p class="text-xs font-semibold">Layers</p>
+        </button>
     </div>
 
-    {#if selectedObject}
-        <div class="mt-4 flex flex-col flex-1 justify-between">
-            <div class="text-sm flex-col space-y-2">
-                {#each Object.keys(selectedObject) as key}
-                    {#if key == "shape" || key == "type"}
-                        <span />
-                    {:else if key == "color"}
-                        <div class="flex space-x-2">
-                            <p class="font-semibold w-16">c:</p>
-                            <input
-                                type="color"
-                                value={selectedObject.color}
-                                class="w-full h-[20px]"
-                                bind:this={selectedColor}
-                                on:change={() => {
-                                    colorChanged(selectedColor.value, "color");
-                                }}
-                            />
-                        </div>
-                    {:else if key == "text"}
-                        <div class="flex space-x-2">
-                            <p class="font-semibold w-16">
-                                {key}:
-                            </p>
-                            <input
-                                type="text"
-                                value={selectedObject[key]}
-                                bind:this={textInput}
-                                class="bg-neutral-200 w-full text-right"
-                                on:change={(change) => {
-                                    stringChanged(change, key);
-                                }}
-                            />
-                        </div>
-                    {:else if key == "scale"}
-                        <div class="flex space-x-2">
-                            <p class="font-semibold w-16">
-                                {key}:
-                            </p>
-                            <input
-                                type="number"
-                                min="0"
-                                max="2"
-                                value={selectedObject[key]}
-                                class="bg-neutral-200 w-full text-right"
-                                on:change={(change) => {
-                                    numberChanged(change, key);
-                                }}
-                            />
-                        </div>
-                    {:else}
-                        <div class="flex space-x-2">
-                            <p class="font-semibold w-16">
-                                {key}:
-                            </p>
-                            <input
-                                type="number"
-                                value={selectedObject[key]}
-                                class="bg-neutral-200 w-full text-right rounded-sm"
-                                on:change={(change) => {
-                                    numberChanged(change, key);
-                                }}
-                            />
-                        </div>
-                    {/if}
-                {/each}
-            </div>
-            <div class="flex-col space-y-2 mt-4">
-                <button
-                    class="w-full h-7 px-2 border-2 border-neutral-900 font-semibold text-xs flex space-x-2 items-center justify-center"
-                    on:click={deleteObject}
-                >
-                    <img src="/delete.svg" alt="Delete Icon" class="h-3" />
-                    <p>Delete</p>
-                </button>
-                <button
-                    class="w-full h-7 px-2 bg-neutral-900 text-white font-semibold text-xs flex space-x-2 items-center justify-center"
-                    on:click={duplicateObject}
-                >
-                    <img src="/copy-white.svg" alt="Delete Icon" class="h-3" />
+    {#if selectedMenu == "properties"}
+        {#if selectedObject}
+            <div class="mt-4 flex flex-col flex-1 justify-between">
+                <div class="text-sm flex-col space-y-2">
+                    {#each Object.keys(selectedObject) as key}
+                        {#if key == "shape" || key == "type"}
+                            <span />
+                        {:else if key == "color"}
+                            <div class="flex space-x-2">
+                                <p class="text-neutral-900 w-16">c</p>
+                                <input
+                                    type="color"
+                                    value={selectedObject.color}
+                                    class="w-full h-[20px]"
+                                    bind:this={selectedColor}
+                                    on:change={() => {
+                                        colorChanged(
+                                            selectedColor.value,
+                                            "color",
+                                        );
+                                    }}
+                                />
+                            </div>
+                        {:else if key == "text"}
+                            <div class="flex space-x-2">
+                                <p class="text-neutral-900 w-16">
+                                    {key}
+                                </p>
+                                <input
+                                    type="text"
+                                    value={selectedObject[key]}
+                                    bind:this={textInput}
+                                    class="bg-neutral-200 w-full text-right"
+                                    on:change={(change) => {
+                                        stringChanged(change, key);
+                                    }}
+                                />
+                            </div>
+                        {:else if key == "scale"}
+                            <div class="flex space-x-2">
+                                <p class="text-neutral-900 w-16">
+                                    {key}
+                                </p>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="2"
+                                    value={selectedObject[key]}
+                                    class="bg-neutral-200 w-full text-right"
+                                    on:change={(change) => {
+                                        numberChanged(change, key);
+                                    }}
+                                />
+                            </div>
+                        {:else}
+                            <div class="flex space-x-2">
+                                <p class="text-neutral-900 w-16">
+                                    {key}
+                                </p>
+                                <input
+                                    type="number"
+                                    value={selectedObject[key]}
+                                    class="bg-neutral-200 w-full text-right rounded-sm"
+                                    on:change={(change) => {
+                                        numberChanged(change, key);
+                                    }}
+                                />
+                            </div>
+                        {/if}
+                    {/each}
+                </div>
+                <div class="flex-col space-y-2 mt-4">
+                    <button
+                        class="w-full h-7 px-2 border-2 border-neutral-900 font-semibold text-xs flex space-x-2 items-center justify-center"
+                        on:click={deleteObject}
+                    >
+                        <img src="/delete.svg" alt="Delete Icon" class="h-3" />
+                        <p>Delete</p>
+                    </button>
+                    <button
+                        class="w-full h-7 px-2 bg-neutral-900 text-white font-semibold text-xs flex space-x-2 items-center justify-center"
+                        on:click={duplicateObject}
+                    >
+                        <img
+                            src="/copy-white.svg"
+                            alt="Delete Icon"
+                            class="h-3"
+                        />
 
-                    <p>Duplicate</p>
-                </button>
+                        <p>Duplicate</p>
+                    </button>
+                </div>
             </div>
-        </div>
-    {:else}
-        <div class="flex-col space-y-1 pt-4">
-            <p class="text-center text-neutral-700  text-xs">
-                Select Object With
-            </p>
-            <p class="text-center text-neutral-700 text-xs">
-                <img
-                    src="/cursor-grey.svg"
-                    alt="grey cursor"
-                    class="w-2 inline align-middle"
-                /> Tool
-            </p>
-        </div>
+        {:else}
+            <div class="flex-col space-y-1 pt-4">
+                <p class="text-center text-neutral-700 text-xs">
+                    Select Object With
+                </p>
+                <p class="text-center text-neutral-700 text-xs">
+                    <img
+                        src="/cursor-grey.svg"
+                        alt="grey cursor"
+                        class="w-2 inline align-middle"
+                    /> Tool
+                </p>
+            </div>
+        {/if}
+    {:else if selectedMenu == "layers"}
+        {#if $objectListWritable.length > 0}
+            <div class="flex-1 flex flex-col justify-between">
+                <ul class="flex flex-col space-y-1">
+                    {#each $objectListWritable.reverse() as object}
+                        <li class="flex items-center justify-between">
+                            <div class="flex items-center space-x-1">
+                                <div
+                                    class="w-3 h-3 rounded-sm"
+                                    style={`background-color:${object.color}`}
+                                ></div>
+                                <p class="text-sm text-neutral-900">
+                                    {object.type}
+                                    {object.shape}
+                                </p>
+                            </div>
+                            <input type="checkbox" on:change={(e)=>{
+                                objectChecked(object, e?.target?.checked || false)
+                            }}/>
+                        </li>
+                    {/each}
+                </ul>
+                <div class="flex items-center justify-between">
+                    <IconButton icon={"/delete.svg"} onClick={checkedObjectsDelete} />
+                    <IconButton icon={"/down.svg"} onClick={() => {}} filled/>
+                    <IconButton icon={"/up.svg"} onClick={() => {}} filled/>
+                </div>
+            </div>
+        {:else}
+            <div class="flex-col space-y-1 pt-4">
+                <p class="text-center text-neutral-700 text-xs">
+                    No Layers Currently
+                </p>
+            </div>
+        {/if}
     {/if}
 </section>
