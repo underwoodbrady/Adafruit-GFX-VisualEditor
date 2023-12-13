@@ -1,7 +1,4 @@
 import type Cell from "./Cell";
-import type HorizontalLine from "./shapes/HorizontalLine";
-import type Line from "./shapes/Line";
-import type VerticalLine from "./shapes/VerticalLine";
 
 type shapes = 'circle' | 'rect' | 'triangle' | 'round-rect' | 'line' | 'dot' | 'h-line' | 'v-line' | 'text' | 'star' | 'heart';
 type shapeType = 'fill' | 'outline';
@@ -12,11 +9,13 @@ type HEX = `#${string}`;
  * 
  */
 class CanvasOb{
+    id: number;
     shape: shapes;
     type: shapeType;
     color: HEX;
 
     constructor(shape:shapes, type:shapeType, color: HEX){
+        this.id = Math.random();
         this.shape = shape;
         this.type = type;
         this.color = color;

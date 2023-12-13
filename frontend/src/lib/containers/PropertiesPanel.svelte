@@ -78,23 +78,45 @@
         // objectListWritable.set(newObjList);
     };
 
-    let selectedObjects:CanvasOb[] = [];
+    let checkedObjects: CanvasOb[] = [];
 
-    let objectChecked = (object:CanvasOb, checked:boolean) => {
-        if (checked){
-            selectedObjects.push(object)
-            return
+    let objectChecked = (object: CanvasOb, checked: boolean) => {
+        if (checked) {
+            checkedObjects.push(object);
+            return;
         }
-        selectedObjects.splice(selectedObjects.indexOf(object),1);
-
-    }
+        checkedObjects.splice(checkedObjects.indexOf(object), 1);
+    };
 
     let checkedObjectsDelete = () => {
-        console.log(selectedObjects)
+        console.log(checkedObjects);
         objectListWritable.update((currentVal) =>
-            currentVal.filter((object)=>!(selectedObjects.includes(object)),
-        ));
-    }
+            currentVal.filter((object) => !checkedObjects.includes(object)),
+        );
+    };
+
+    //TODO: see if there is a faster way
+    let checkedObjectsMove = (moveUp: boolean) => {
+        let newObList = [...$objectListWritable];
+        for (let i: number = 0, e: number = checkedObjects.length; i < e; i++) {
+            const currentCheckedOb = checkedObjects[i],
+                currentCheckedObIndex = newObList.indexOf(currentCheckedOb);
+
+            if (moveUp && currentCheckedObIndex + 1 == $objectListWritable.length || !moveUp && currentCheckedObIndex == 0) return; //Can't move up if already at top
+
+            let newObIndex = currentCheckedObIndex + (moveUp ? 1 : -1);
+
+            newObList.splice(currentCheckedObIndex, 1); //Remove old object
+
+            newObList = [
+                ...newObList.slice(0, newObIndex),
+                currentCheckedOb,
+                ...newObList.slice(newObIndex),
+            ]; //Paste in new object at new index
+        }
+        console.log(newObList);
+        objectListWritable.set(newObList);
+    };
 
     afterUpdate(() => {
         if (selectedObject) {
@@ -124,8 +146,8 @@
                     ? " "
                     : " bg-neutral-400 border-b border-l border-neutral-500 shadow-inner")}
             on:click={() => {
-                selectedMenu = "layers"
-                selectedObjects = []
+                selectedMenu = "layers";
+                checkedObjects = [];
             }}
         >
             <img src="/layers.svg" alt="Properties Icon" class="w-3" />
@@ -138,7 +160,7 @@
             <div class="mt-4 flex flex-col flex-1 justify-between">
                 <div class="text-sm flex-col space-y-2">
                     {#each Object.keys(selectedObject) as key}
-                        {#if key == "shape" || key == "type"}
+                        {#if key == "shape" || key == "type" || key == "id"}
                             <span />
                         {:else if key == "color"}
                             <div class="flex space-x-2">
@@ -244,7 +266,7 @@
         {#if $objectListWritable.length > 0}
             <div class="flex-1 flex flex-col justify-between">
                 <ul class="flex flex-col space-y-1">
-                    {#each $objectListWritable.reverse() as object}
+                    {#each [...$objectListWritable].reverse() as object (object.id)}
                         <li class="flex items-center justify-between">
                             <div class="flex items-center space-x-1">
                                 <div
@@ -256,16 +278,33 @@
                                     {object.shape}
                                 </p>
                             </div>
-                            <input type="checkbox" on:change={(e)=>{
-                                objectChecked(object, e?.target?.checked || false)
-                            }}/>
+                            <input
+                                type="checkbox"
+                                on:change={(e) => {
+                                    objectChecked(
+                                        object,
+                                        e?.target?.checked || false,
+                                    );
+                                }}
+                            />
                         </li>
                     {/each}
                 </ul>
                 <div class="flex items-center justify-between">
-                    <IconButton icon={"/delete.svg"} onClick={checkedObjectsDelete} />
-                    <IconButton icon={"/down.svg"} onClick={() => {}} filled/>
-                    <IconButton icon={"/up.svg"} onClick={() => {}} filled/>
+                    <IconButton
+                        icon={"/delete.svg"}
+                        onClick={checkedObjectsDelete}
+                    />
+                    <IconButton
+                        icon={"/down.svg"}
+                        onClick={() => checkedObjectsMove(false)}
+                        filled
+                    />
+                    <IconButton
+                        icon={"/up.svg"}
+                        onClick={() => checkedObjectsMove(true)}
+                        filled
+                    />
                 </div>
             </div>
         {:else}
