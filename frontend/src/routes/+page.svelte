@@ -9,23 +9,24 @@
     import ToolSelector from "$lib/containers/ToolSelector.svelte";
     import Tooltip from "$lib/components/Tooltip.svelte";
     import TooltipTop from "$lib/components/TooltipTop.svelte";
-    import ConfirmationModal from "$lib/containers/ConfirmationModal.svelte";
+    import ConfirmationModal from "$lib/components/ConfirmationModal.svelte";
 
-    //Svelte Imports
+    /*Svelte Imports*/
     import {
         objectListWritable,
         selectedObject,
     } from "$lib/containers/objectList";
     import { onMount } from "svelte";
 
-    //Code Library Imports
+    /*Code Library Imports*/
     import Highlight, { LineNumbers } from "svelte-highlight";
     import arduino from "svelte-highlight/languages/arduino";
     import arduinoLight from "svelte-highlight/styles/docco";
 
-    //Utility Imports
+    /*Utility Imports*/
     import { createFullCode } from "../createCode";
-    import displayToLib from "../displayToLib.json";
+    import displayToLib from "../utils/displayToLib.json";
+    import SettingsModal from "$lib/components/SettingsModal.svelte";
 
     let canvasTrueWidth: number;
     let canvasTrueHeight: number;
@@ -169,6 +170,8 @@
         "#",
     ];
 
+    let monochromeColors: HEX[] = ["#000000", "#ffffff"];
+
     let selectedDisplay: keyof typeof displayToLib | undefined;
     let customDisplay: {
         width: number;
@@ -185,6 +188,8 @@
     let confirmationModalTitle: string;
     let confirmationModalText: string;
     let codeSection: HTMLElement;
+
+    let displaySettingsModal: boolean = true;
 
     let hideConfirmationModal = () => {
         displayConfirmationModal = false;
@@ -207,15 +212,17 @@
         objectListWritable.set([]);
         canvasTrueWidth = display.width;
         canvasTrueHeight = display.height;
+        selectedColor = "#ffffff";
         hideConfirmationModal();
     };
 
     let confirmChoosenDisplay = (display: keyof typeof displayToLib) => {
         selectedDisplay = display;
-        selectedLibrary = displayToLib[selectedDisplay].lib
+        selectedLibrary = displayToLib[selectedDisplay].lib;
         objectListWritable.set([]);
         canvasTrueWidth = Number(displayToLib[display].res.split("x")[0]);
         canvasTrueHeight = Number(displayToLib[display].res.split("x")[1]);
+        selectedColor = "#ffffff";
         hideConfirmationModal();
     };
 
@@ -235,11 +242,7 @@
 
     let generateCode = () => {
         currentStage = 0;
-        createFullCode(
-            selectedLibrary,
-            [""],
-            $objectListWritable,
-        ).then((c) => {
+        createFullCode(selectedLibrary, [""], $objectListWritable).then((c) => {
             code = c;
             const data = new Blob([code], { type: "text/plain" }); //Creates text file with each word on its own line
 
@@ -279,7 +282,10 @@
 
 <Header
     displays={displayToLib}
-    choosenDisplay={selectedDisplay || (customDisplay?.width ? (`Custom ${customDisplay?.width}x${customDisplay?.height}`) : undefined)}
+    choosenDisplay={selectedDisplay ||
+        (customDisplay?.width
+            ? `Custom ${customDisplay?.width}x${customDisplay?.height}`
+            : undefined)}
     {setChoosenDisplay}
     {setCustomDisplay}
     dropdownOpen={displayDropdownOpen}
@@ -315,7 +321,7 @@
         <div class="absolute -left-[104px] top-0 grid grid-cols-2 gap-4">
             <!--Color Panel-->
             <ColorSelector
-                {colors}
+                colors={selectedDisplay ? (displayToLib[selectedDisplay].color ? colors : monochromeColors) : colors}
                 {selectedColor}
                 updateSelectedColor={(color) => {
                     selectedColor = color;
@@ -471,5 +477,12 @@
         onPressCancel={hideConfirmationModal}
         onPressAction={() => confirmChoosenDisplay(tempSelectedDisplay)}
     />
+{/if}
+{#if displaySettingsModal}
+<SettingsModal
+title="Are you sure f want to continue?"
+text="Switching f will clear the canvas"
+onPressCancel={hideConfirmationModal}
+onPressAction={() => confirmChoosenDisplay(tempSelectedDisplay)}/>
 {/if}
 <footer />

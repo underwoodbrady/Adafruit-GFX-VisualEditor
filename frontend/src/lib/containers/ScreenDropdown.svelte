@@ -1,7 +1,7 @@
 <script lang="ts">
     import Screen from "$lib/components/Screen.svelte";
     import TextButton from "$lib/components/TextButton.svelte";
-    import displayToLib from "../../displayToLib.json";
+    import displayToLib from "../../utils/displayToLib.json";
 
     export let choosenDisplay: string;
     export let displays: typeof displayToLib;

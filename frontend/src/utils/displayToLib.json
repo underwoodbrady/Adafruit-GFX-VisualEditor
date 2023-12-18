@@ -2,56 +2,67 @@
     "OLED 128x64": {
         "lib": "Adafruit_SSD1306.h",
         "res": "128x64",
-        "details": "Monochrome 0.96 inch"
+        "details": "Monochrome 0.96 inch",
+        "color": false
     },
     "OLED 96x64": {
         "lib": "Adafruit_SSD1331.h",
         "res": "96x64",
-        "details": "Color 0.96 inch"
+        "details": "Color 0.96 inch",
+        "color": true
     },
     "OLED 320x170": {
         "lib": "Adafruit_ST7789.h",
         "res": "320x170",
-        "details": "IPS 1.9 inch"
+        "details": "IPS 1.9 inch",
+        "color": true
     },
     "LCD 240X320": {
         "lib": "Adafruit_ILI9341.h",
         "res": "240x320",
-        "details": "TFT 2.8 inch"
+        "details": "TFT 2.8 inch",
+        "color": true
     },
     "LCD 128x160": {
         "lib": "Adafruit_ST7735R.h",
         "res": "128x160",
-        "details": "TFT 1.8 inch"
+        "details": "TFT 1.8 inch",
+        "color": true
     },
     "LCD 128x128": {
         "lib": "Adafruit_ST7735.h",
         "res": "128x128",
-        "details": "TFT 1.44 inch"
+        "details": "TFT 1.44 inch",
+        "color": true
     },
     "OLED 128x128": {
         "lib": "Adafruit_SSD1351.h",
         "res": "128x128",
-        "details": "Color 1.5 inch"
+        "details": "Color 1.5 inch",
+        "color": true
     },
     "OLED 128x32": {
         "lib": "Adafruit_SSD1306.h",
         "res": "128x32",
-        "details": "Monochrome 0.91 inch"
+        "details": "Monochrome 0.91 inch",
+        "color": false
     },
     "LCD 240x320": {
         "lib": "Adafruit_ILI9341.h",
         "res": "240x320",
-        "details": "TFT 2.4 inch"
+        "details": "TFT 2.4 inch",
+        "color": true
     },
     "LCD 480x320": {
         "lib": "Adafruit_HX8357.h",
         "res": "480x320",
-        "details": "TFT 3.5 inch"
+        "details": "TFT 3.5 inch",
+        "color": true
     },
     "LCD 220x176": {
         "lib": "Adafruit_HX8340BN.h",
         "res": "220x176",
-        "details": "TFT 2.2 inch"
+        "details": "TFT 2.2 inch",
+        "color": true
     }
 }

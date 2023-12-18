@@ -91,6 +91,10 @@ class CanvasOb{
         }
     }
     
+    //Implement for each child class
+    drawCells(cellList: Cell[][]) {
+        throw new Error("Method not implemented.");
+    }
 }
 
 export default CanvasOb;

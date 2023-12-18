@@ -1,7 +1,7 @@
 <script lang="ts">
     import Tooltip from "$lib/components/Tooltip.svelte";
     import ScreenDropdown from "./ScreenDropdown.svelte";
-    import type displayToLib from "../../displayToLib.json";
+    import type displayToLib from "../../utils/displayToLib.json";
     export let setChoosenDisplay:(display:keyof typeof displayToLib)=>void;
     export let setCustomDisplay: (display: {
         width:number,

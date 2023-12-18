@@ -328,32 +328,7 @@
     };
 
     let mapObjectToCells = (object: CanvasOb) => {
-        switch (object.shape) {
-            case "circle":
-                (object as Circle).drawCells(cellList); //This is probably scuffed
-                break;
-            case "rect":
-                (object as Rect).drawCells(cellList);
-                break;
-            case "triangle":
-                (object as Triangle).drawCells(cellList);
-                break;
-            case "round-rect":
-                (object as RoundRect).drawCells(cellList);
-                break;
-            case "line":
-                (object as Line).drawCells(cellList);
-                break;
-            case "dot":
-                (object as Dot).drawCells(cellList);
-                break;
-            case "text":
-                (object as Text).drawCells(cellList);
-                break;
-            case "heart":
-                (object as Heart).drawCells(cellList);
-                break;
-        }
+        object.drawCells(cellList)
     };
 
     //Fully redraws canvas

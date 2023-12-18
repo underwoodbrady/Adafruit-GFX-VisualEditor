@@ -1,7 +1,7 @@
-import codeFormat from "./codeFormat.txt";
-import codeONLYFormat from "./codeONLYFormat.txt";
-import type displayToLib from "./displayToLib.json";
-import defaultLabelColors from "./defaultLabelColors.json";
+import codeFormat from "./utils/codeFormat.txt";
+import codeONLYFormat from "./utils/codeONLYFormat.txt";
+import type displayToLib from "./utils/displayToLib.json";
+import defaultLabelColors from "./utils/defaultLabelColors.json";
 import type CanvasOb from "./classes/CanvasOb";
 import type Rect from "./classes/shapes/Rect";
 import type Circle from "./classes/shapes/Circle";
@@ -34,8 +34,6 @@ let colors: any = {
     
 }
 
-let numColors = 0; //TODO: Could just use .length instead
-
 //The gift of chatgpt
 function convertHexToRGB565(hexColor:string) {
     // Remove the '#' symbol from the hex color
@@ -56,7 +54,7 @@ function convertHexToRGB565(hexColor:string) {
   }
 
 let extractColors = (objects:CanvasOb[]) => {
-    numColors = 0;
+    let numColors = 0; //TODO: Could just use .length instead
     colors = {}
     for(let x:number = 0, l:number = objects.length; x<l; x++){
         let currentOb = objects[x]
@@ -134,6 +132,7 @@ let convertObjectsToCode = (object: CanvasOb): string => {
 
 export const createFullCode = async (displayLib: string, customFontImports: string[], objectList: CanvasOb[]) => {
     let newLines:string[] = [];
+    extractColors(objectList)
     await fetch(codeFormat)
         .then((response) => response.text())
         .then((result) => {
@@ -151,7 +150,6 @@ export const createFullCode = async (displayLib: string, customFontImports: stri
                             line = ""
                             break;
                         case 2:
-                            extractColors(objectList)
                             line = (Object.keys(colors).map((color:any) => `#define ${colors[color]['label']}    ${colors[color]['rgb565']}`)).join("\n")
                             break;
                         case 3:
