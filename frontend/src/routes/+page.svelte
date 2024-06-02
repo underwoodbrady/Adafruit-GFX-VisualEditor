@@ -48,7 +48,7 @@
         let xBuffer = 344;
         let possibleSizes = Array.from(
             { length: canvasMaxScale },
-            (value, index) => 1 + index * 1,
+            (value, index) => 1 + index,
         ).filter((num) => {
             return num * canvasTrueWidth < screenWidth - xBuffer;
         });
@@ -185,15 +185,17 @@
     let displayDropdownOpen: boolean = false;
     let tempSelectedDisplay: keyof typeof displayToLib;
     let displayConfirmationModal: boolean = false;
-    let confirmationModalTitle: string;
-    let confirmationModalText: string;
     let codeSection: HTMLElement;
 
-    let displaySettingsModal: boolean = true;
+    let displaySettingsModal: boolean = false;
 
     let hideConfirmationModal = () => {
         displayConfirmationModal = false;
     };
+
+    let hideSettingsModal = () => {
+        displaySettingsModal = false;
+    }
 
     //TODO: Unify arrow functions vs traditional
     let setChoosenDisplay = (display: keyof typeof displayToLib) => {
@@ -308,7 +310,9 @@
                 code = "";
             }}
         />
-        <IconButton icon="/gear.svg" onClick={() => {}} filled />
+        <IconButton icon="/gear.svg" onClick={() => {
+            displaySettingsModal = true;
+        }} filled />
         <TextButton
             icon="/code.svg"
             text="Generate"
@@ -321,7 +325,11 @@
         <div class="absolute -left-[104px] top-0 grid grid-cols-2 gap-4">
             <!--Color Panel-->
             <ColorSelector
-                colors={selectedDisplay ? (displayToLib[selectedDisplay].color ? colors : monochromeColors) : colors}
+                colors={selectedDisplay
+                    ? displayToLib[selectedDisplay].color
+                        ? colors
+                        : monochromeColors
+                    : colors}
                 {selectedColor}
                 updateSelectedColor={(color) => {
                     selectedColor = color;
@@ -479,10 +487,9 @@
     />
 {/if}
 {#if displaySettingsModal}
-<SettingsModal
-title="Are you sure f want to continue?"
-text="Switching f will clear the canvas"
-onPressCancel={hideConfirmationModal}
-onPressAction={() => confirmChoosenDisplay(tempSelectedDisplay)}/>
+    <SettingsModal
+        onPressCancel={hideSettingsModal}
+        onPressAction={hideSettingsModal}
+    />
 {/if}
 <footer />
