@@ -1,6 +1,6 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
-type HEX = `#${string}`;
 
 let defaultFontBitmap = [
     0x3E, 0x51, 0x49, 0x45, 0x3E,
@@ -169,7 +169,7 @@ class Text extends CanvasOb {
     scale: number;
 
     constructor(x: number, y: number, text: string = "", color: HEX,  scale:number = 1) {
-        super("text", 'fill', color);
+        super(Shape.Text, 'fill', color);
         this.x = x;
         this.y = y;
         this.text = text;
@@ -209,15 +209,15 @@ class Text extends CanvasOb {
                     {
                         for(let scaleX =0; scaleX<this.scale; scaleX++){
                             cellList[y][x+scaleX].color = this.color;
-                            cellList[y][x+scaleX]._object = this;
+                            cellList[y][x+scaleX].object = this;
                         }
                         for(let scaleY =0; scaleY<this.scale; scaleY++){
                             cellList[y+scaleY][x].color = this.color;
-                            cellList[y+scaleY][x]._object = this;
+                            cellList[y+scaleY][x].object = this;
                         }
                         for(let diag =0; diag<this.scale; diag++){
                             cellList[y+diag][x+diag].color = this.color;
-                            cellList[y+diag][x+diag]._object = this;
+                            cellList[y+diag][x+diag].object = this;
                         }
                     }
                     heightCount++;

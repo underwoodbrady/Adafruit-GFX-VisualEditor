@@ -15,6 +15,7 @@
     import Text from "../../classes/shapes/Text";
     import RoundRect from "../../classes/shapes/RoundRect";
     import Heart from "../../classes/compoundshapes/Heart";
+    import Star from "../../classes/compoundshapes/Star";
 
     type HEX = `#${string}`;
 
@@ -73,11 +74,11 @@
         canvas.onmousemove = null;
         let newObject: CanvasOb | undefined = undefined;
 
-        let cellX = Math.round(startingMouseX / canvasScale);
-        let cellY = Math.round(startingMouseY / canvasScale);
+        let cellX = Math.floor(startingMouseX / canvasScale);
+        let cellY = Math.floor(startingMouseY / canvasScale);
 
-        let cellWidth = Math.round((mouseX - startingMouseX) / canvasScale);
-        let cellHeight = Math.round((mouseY - startingMouseY) / canvasScale);
+        let cellWidth = Math.floor((mouseX - startingMouseX) / canvasScale);
+        let cellHeight = Math.floor((mouseY - startingMouseY) / canvasScale);
 
         let widthHeightToRadius = Math.min(
             Math.max(Math.round(cellWidth / 2), Math.round(cellHeight / 2)),
@@ -203,8 +204,17 @@
                     selectedColor,
                 );
                 break;
+            case "star-open":
+                newObject = new Star(
+                    "outline",
+                    cellX,
+                    cellY,
+                    widthHeightToRadius * 2,
+                    selectedColor,
+                );
+                break;
             case "cursor":
-                ob = cellList[cellY][cellX]._object;
+                ob = cellList[cellY][cellX].object;
                 if (!(ob == undefined)) selectedObject.set(ob);
                 return;
             case "text":
@@ -212,7 +222,7 @@
                 selectedObject.set(newObject);
                 break;
             case "paint-bucket":
-                ob = cellList[cellY][cellX]._object;
+                ob = cellList[cellY][cellX].object;
                 if (!(ob == undefined)) {
                     ob.color = selectedColor;
                     fullRedraw(); //TODO: Make more efficient
@@ -241,8 +251,8 @@
         let { mouseX, mouseY } = getMousePositions(e);
         let newObject = new Dot( //TODO: Add interpolation?
             "outline",
-            Math.round(mouseX / canvasScale),
-            Math.round(mouseY / canvasScale),
+            Math.floor(mouseX / canvasScale),
+            Math.floor(mouseY / canvasScale),
             selectedColor,
         );
         if (newObject) addNewObject(newObject);
@@ -283,7 +293,7 @@
             ) {
                 let cell = cellRow[cellNum];
                 cell.color = "#";
-                cell._object = undefined;
+                cell.object = undefined;
             }
         }
     };
@@ -309,7 +319,7 @@
                 let cell = cellRow[cellNum];
                 if (cell.color == "#") continue;
                 else ctx.fillStyle = cell.color;
-                //ctx.fillStyle = `rgb(${cellRowNum/cellListLength*255},${cellNum/cellRowLength*255},${125})` Pretty Gradient
+                //ctx.fillStyle = `rgb(${cellRowNum/cellListLength*255},${cellNum/cellRowLength*255},${125})` //Pretty Gradient
                 ctx.fillRect(cell.x, cell.y, cell.size, cell.size);
             }
         }

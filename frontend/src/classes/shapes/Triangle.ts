@@ -1,7 +1,6 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
-type shapeType = 'fill' | 'outline';
-type HEX = `#${string}`;
 
 class Triangle extends CanvasOb {
     x1: number; 
@@ -13,7 +12,7 @@ class Triangle extends CanvasOb {
 
 
     constructor(type: shapeType, x1:number, y1:number, x2:number, y2:number, x3:number, y3:number, color: HEX) {
-        super("triangle", type, color);
+        super(Shape.Triangle, type, color);
         this.x1 = x1;
         this.y1  =y1;
         this.x2 = x2;
@@ -22,7 +21,8 @@ class Triangle extends CanvasOb {
         this.y3 = y3;
     }
 
-    drawCells(cellList: Cell[][]) {
+    drawCells(cellList: Cell[][], altRef?:CanvasOb) {
+        let referenceOb = altRef || this;
         let sign = (p1:any, p2:any, p3:any) => (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
         let isPointInTriangle = (pt:any) =>{
             const d1 = sign(pt, {x:this.x1, y:this.y1}, {x:this.x2, y:this.y2});
@@ -52,14 +52,14 @@ class Triangle extends CanvasOb {
                     let cell = cellRow[cellNum];
                     if (isPointInTriangle({x:cellNum, y:cellRowNum})) {
                         cell.color = this.color;
-                        cell.object = this;
+                        cell.object = referenceOb;
                     } 
                 }
             }
         }else{
-            this.drawLine(cellList, this.x1, this.y1, this.x2, this.y2, this)
-            this.drawLine(cellList, this.x2, this.y2, this.x3, this.y3, this)
-            this.drawLine(cellList, this.x1, this.y1, this.x3, this.y3, this)
+            CanvasOb.drawLine(cellList, this.x1, this.y1, this.x2, this.y2, referenceOb)
+            CanvasOb.drawLine(cellList, this.x2, this.y2, this.x3, this.y3, referenceOb)
+            CanvasOb.drawLine(cellList, this.x1, this.y1, this.x3, this.y3, referenceOb)
         }
     }
 }

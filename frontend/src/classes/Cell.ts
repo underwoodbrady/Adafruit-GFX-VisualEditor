@@ -1,17 +1,16 @@
-import type CanvasOb from "./CanvasOb";
-
-type HEX = `#${string}`;
+import type {CanvasOb, HEX} from "./CanvasOb";
 
 /**
- * TODO:Add documentation
+ * Represents a single pixel on the display grid and its corresponding properties
  * 
  */
 class Cell {
-    x: number;
-    y: number;
-    size: number;
+    readonly x: number;
+    readonly y: number;
+    readonly size: number;
+
     color: HEX;
-    _object: CanvasOb | undefined;
+    private _object: CanvasOb | undefined;
 
     constructor(x: number, y: number, size: number) {
         this.x = x;
@@ -24,6 +23,7 @@ class Cell {
         return this._object;
     }
 
+    /**Might want to add logic eventually */
     set object(value) {
         this._object = value;
     }

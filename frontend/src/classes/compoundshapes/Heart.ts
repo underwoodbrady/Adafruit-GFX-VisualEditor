@@ -1,9 +1,9 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
 import Circle from "../shapes/Circle";
 import Triangle from "../shapes/Triangle";
-type shapeType = 'fill' | 'outline';
-type HEX = `#${string}`;
+
 
 class Heart extends CanvasOb {
     x: number; //X Position on display (from the left)
@@ -12,23 +12,46 @@ class Heart extends CanvasOb {
     h: number; //Height of heart
 
     constructor(type: shapeType, x: number, y: number, w: number, h: number, color: HEX) {
-        super("heart", type, color);
+        super(Shape.Heart, type, color);
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
     }
 
+    private static readonly CIRCLE_RATIO = 2 / 7;
+    private static readonly TRIANGLE_TOP_X_RATIO = 32 / 35;
+    private static readonly TRIANGLE_TOP_Y_RATIO = 17 / 35;
+    private static readonly TRIANGLE_BOTTOM_X_RATIO = 3 / 35;
+
+    private circleX(isRight: boolean): number {
+        return Math.floor(this.x + (isRight ? this.w - this.w * Heart.CIRCLE_RATIO : this.w * Heart.CIRCLE_RATIO));
+    }
+
+    private circleY(): number {
+        return Math.floor(this.y + this.h * Heart.CIRCLE_RATIO);
+    }
+
+    private circleRadius(): number {
+        return Math.floor(this.w * Heart.CIRCLE_RATIO);
+    }
+
     //TODO: Get rid of the +1 across multiple classes
-    //TODO: Use math.floor or math.ceil instead of round across codebase (but be consistent)
     drawCells(cellList: Cell[][]) {
-        let c1 = new Circle('fill',Math.floor(this.x+(this.w*2/7)),Math.floor(this.y+(this.h*2/7)), Math.floor((this.w*2/7)), this.color)
-        c1.drawCells(cellList);
-        let c2 = new Circle('fill',Math.floor(this.x+this.w-(this.w*2/7)),Math.floor(this.y+(this.h*2/7)), Math.floor((this.w*2/7)), this.color)
-        c2.drawCells(cellList);
-        let t1 = new Triangle('fill',Math.floor(this.x+(this.w/2)),this.y+this.h, Math.floor(this.x+(this.w*32/35)), Math.floor(this.y+(this.h*17/35)), Math.floor(this.x+(this.w*3/35)), Math.floor(this.y+(this.h*17/35)), this.color);
-        t1.drawCells(cellList);
-        c1 = c2 = t1 = null;
+        const leftCircle = new Circle('fill', this.circleX(false), this.circleY(), this.circleRadius(), this.color);
+        const rightCircle = new Circle('fill', this.circleX(true), this.circleY(), this.circleRadius(), this.color);
+        const triangle = new Triangle(
+            'fill',
+            Math.floor(this.x + this.w / 2),
+            this.y + this.h,
+            Math.floor(this.x + this.w * Heart.TRIANGLE_TOP_X_RATIO),
+            Math.floor(this.y + this.h * Heart.TRIANGLE_TOP_Y_RATIO),
+            Math.floor(this.x + this.w * Heart.TRIANGLE_BOTTOM_X_RATIO),
+            Math.floor(this.y + this.h * Heart.TRIANGLE_TOP_Y_RATIO),
+            this.color
+        );
+
+        [leftCircle, rightCircle, triangle].forEach(shape => shape.drawCells(cellList, this));
     }
 }
 

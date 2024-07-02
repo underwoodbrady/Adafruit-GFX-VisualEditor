@@ -1,7 +1,6 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
-type shapeType = 'fill' | 'outline';
-type HEX = `#${string}`;
 
 class HorizontalLine extends CanvasOb {
     x: number; //X Position on display 
@@ -9,14 +8,14 @@ class HorizontalLine extends CanvasOb {
     l: number;
 
     constructor(type: shapeType, x:number, y:number, l:number, color: HEX) {
-        super("h-line", type, color);
+        super(Shape.HLine, type, color);
         this.x = x;
         this.y = y;
         this.l = l;
     }
 
     drawCells(cellList: Cell[][]) {
-        this.drawHLine(cellList, this.x, this.y, this.l, this);
+        CanvasOb.drawHLine(cellList, this.x, this.y, this.l, this);
     }
 }
 

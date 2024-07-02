@@ -1,7 +1,6 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
-type shapeType = 'fill' | 'outline';
-type HEX = `#${string}`;
 
 class Circle extends CanvasOb {
     x: number; //X Position on display (from the middle)
@@ -9,13 +8,14 @@ class Circle extends CanvasOb {
     r: number; //Radius of Circle
 
     constructor(type: shapeType, x: number, y: number, r: number, color: HEX) {
-        super("circle", type, color); 
+        super(Shape.Circle, type, color); 
         this.x = x;
         this.y = y;
         this.r = r;
     }
 
-    drawCells(cellList: Cell[][]) {
+    drawCells(cellList: Cell[][], altRef?:CanvasOb) {
+        let referenceOb = altRef || this;
         for (
             let cellRowNum: number = this.y-this.r,
             cellRowMax = this.y+this.r;
@@ -37,13 +37,13 @@ class Circle extends CanvasOb {
                 if (distance < this.r) {
                     if (this.type == "fill") {
                         cell.color = this.color;
-                        cell.object = this;
+                        cell.object = referenceOb;
                     } else if (
                         this.type == "outline" &&
                         Math.abs(distance-this.r) <=1
                     ) {
                         cell.color = this.color;
-                        cell.object = this;
+                        cell.object = referenceOb;
                     }
                 }
 

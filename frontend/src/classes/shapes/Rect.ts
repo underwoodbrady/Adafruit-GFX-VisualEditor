@@ -1,7 +1,6 @@
-import CanvasOb from "../CanvasOb";
+import CanvasOb, { Shape } from "../CanvasOb";
+import type { HEX, shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
-type shapeType = 'fill' | 'outline';
-type HEX = `#${string}`;
 
 class Rect extends CanvasOb {
     x: number; //X Position on display (from the left)
@@ -10,7 +9,7 @@ class Rect extends CanvasOb {
     h: number; //Height of rect
 
     constructor(type: shapeType, x: number, y: number, w: number, h: number, color: HEX) {
-        super("rect", type, color);
+        super(Shape.Rect, type, color);
         this.x = x;
         this.y = y;
         this.w = w;
@@ -40,10 +39,10 @@ class Rect extends CanvasOb {
             }
         }
         else {
-            this.drawHLine(cellList, this.x,  this.y, this.w, this)
-            this.drawHLine(cellList, this.x,  this.y+this.h, this.w+1, this)
-            this.drawVLine(cellList, this.x,  this.y, this.h, this)
-            this.drawVLine(cellList, this.x+this.w,  this.y, this.h, this)
+            CanvasOb.drawHLine(cellList, this.x,  this.y, this.w, this)
+            CanvasOb.drawHLine(cellList, this.x,  this.y+this.h, this.w+1, this)
+            CanvasOb.drawVLine(cellList, this.x,  this.y, this.h, this)
+            CanvasOb.drawVLine(cellList, this.x+this.w,  this.y, this.h, this)
         }
         
     }
