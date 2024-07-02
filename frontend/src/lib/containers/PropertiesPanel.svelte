@@ -4,8 +4,9 @@
     import { canvasRedraws, objectListWritable } from "./objectList";
     import type Text from "../../classes/shapes/Text";
     import IconButton from "$lib/components/IconButton.svelte";
+    import { type Writable } from "svelte/store";
 
-    export let selectedObject: CanvasOb | undefined;
+    export let selectedObject: Writable<CanvasOb | undefined>;
     export let canvasTrueWidth: number;
     export let canvasTrueHeight: number;
 
@@ -42,9 +43,9 @@
 
     //These functions are so ugly don't look... Honestly shocking they work
     let numberChanged = (change: any, key: objectKeys) => {
-        if (selectedObject == undefined) return;
+        if ($selectedObject == undefined) return;
         console.log((change.target as HTMLInputElement).value);
-        let so = selectedObject;
+        let so = $selectedObject;
         so[key] = Number((change.target as HTMLInputElement).value);
         if (checkCanvasBoundries(so.x, so.y, so.w, so.h))
             canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
@@ -52,21 +53,21 @@
 
     let stringChanged = (change: any, key: objectKeys) => {
         console.log((change.target as HTMLInputElement).value);
-        let so = selectedObject;
+        let so = $selectedObject;
         so[key] = String((change.target as HTMLInputElement).value);
         canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
     };
 
     let colorChanged = (change: any, key: objectKeys) => {
         console.log(change);
-        let so = selectedObject;
+        let so = $selectedObject;
         so[key] = change;
         canvasRedraws.update((canvasRedraws) => canvasRedraws + 1);
     };
 
     let deleteObject = () => {
         objectListWritable.update((currentVal) =>
-            currentVal.filter((object) => object != selectedObject),
+            currentVal.filter((object) => object != $selectedObject),
         );
     };
 
@@ -81,11 +82,14 @@
     let checkedObjects: CanvasOb[] = [];
 
     let objectChecked = (object: CanvasOb, checked: boolean) => {
+        selectedObject.set(object);
+
         if (checked) {
             checkedObjects.push(object);
             return;
         }
         checkedObjects.splice(checkedObjects.indexOf(object), 1);
+
     };
 
     let checkedObjectsDelete = () => {
@@ -129,9 +133,9 @@
     };
 
     afterUpdate(() => {
-        if (selectedObject) {
-            if (selectedObject.shape == "text" && textInput) {
-                textInput.value = (selectedObject as Text).text;
+        if ($selectedObject) {
+            if ($selectedObject.shape == "text" && textInput) {
+                textInput.value = ($selectedObject as Text).text;
                 textInput.focus();
             }
         }
@@ -166,18 +170,20 @@
     </div>
 
     {#if selectedMenu == "properties"}
-        {#if selectedObject}
+        {#if $selectedObject}
             <div class="mt-4 flex flex-col flex-1 justify-between">
                 <div class="text-sm flex-col space-y-2">
-                    {#each Object.keys(selectedObject) as key}
-                        {#if key == "shape" || key == "type" || key == "id"}
+                    {#each Object.keys($selectedObject) as key}
+                        {#if  key == "id"  || key == "type"}
                             <span />
+                        {:else if key == "shape"}
+                            <p class="font-medium !mt-0 pb-2">{$selectedObject.stringFormatted()}</p>
                         {:else if key == "color"}
                             <div class="flex space-x-2">
                                 <p class="text-neutral-900 w-16">c</p>
                                 <input
                                     type="color"
-                                    value={selectedObject.color}
+                                    value={$selectedObject.color}
                                     class="w-full h-[20px]"
                                     bind:this={selectedColor}
                                     on:change={() => {
@@ -195,7 +201,7 @@
                                 </p>
                                 <input
                                     type="text"
-                                    value={selectedObject[key]}
+                                    value={$selectedObject[key]}
                                     bind:this={textInput}
                                     class="bg-neutral-200 w-full text-right"
                                     on:change={(change) => {
@@ -212,7 +218,7 @@
                                     type="number"
                                     min="0"
                                     max="2"
-                                    value={selectedObject[key]}
+                                    value={$selectedObject[key]}
                                     class="bg-neutral-200 w-full text-right"
                                     on:change={(change) => {
                                         numberChanged(change, key);
@@ -226,7 +232,7 @@
                                 </p>
                                 <input
                                     type="number"
-                                    value={selectedObject[key]}
+                                    value={$selectedObject[key]}
                                     class="bg-neutral-200 w-full text-right rounded-sm"
                                     on:change={(change) => {
                                         numberChanged(change, key);

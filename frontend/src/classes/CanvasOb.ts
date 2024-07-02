@@ -12,6 +12,7 @@ export enum Shape {
     Text = 'text',
     Star = 'star',
     Heart = 'heart',
+    Polygon = 'polygon',
 }
 export type shapeType = 'fill' | 'outline';
 export type HEX = `#${string}`;
@@ -105,7 +106,7 @@ class CanvasOb{
     }
 
     stringFormatted() : string{
-        return `${this.shape.charAt(0)?.toUpperCase() + this.shape.slice(1)} - ${this.type}`;
+        return `${this.shape.charAt(0)?.toUpperCase() + this.shape.slice(1)}  (${this.type})`;
     }
 }
 

@@ -16,6 +16,7 @@
     import RoundRect from "../../classes/shapes/RoundRect";
     import Heart from "../../classes/compoundshapes/Heart";
     import Star from "../../classes/compoundshapes/Star";
+    import Polygon from "../../classes/compoundshapes/Polygon";
 
     type HEX = `#${string}`;
 
@@ -206,6 +207,15 @@
                 break;
             case "star-open":
                 newObject = new Star(
+                    "outline",
+                    cellX,
+                    cellY,
+                    widthHeightToRadius * 2,
+                    selectedColor,
+                );
+                break;
+            case "polygon-open":
+                newObject = new Polygon(
                     "outline",
                     cellX,
                     cellY,

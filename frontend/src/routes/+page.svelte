@@ -151,6 +151,11 @@
             image: "/star-open.svg",
             special: true,
         },
+        // {
+        //     name: "polygon-open",
+        //     image: "/star-open.svg",
+        //     special: true,
+        // },
     ];
 
     type HEX = `#${string}`;
@@ -413,7 +418,7 @@
             <PropertiesPanel
                 {canvasTrueWidth}
                 {canvasTrueHeight}
-                selectedObject={$selectedObject}
+                selectedObject={selectedObject}
             />
         </div>
     </section>
