@@ -1,11 +1,9 @@
 <script lang="ts">
-    type HEX = `#${string}`;
-
     export let color: string = "transparent";
     export let onClick: () => void;
     export let selected: boolean = false;
     export let openSlot: boolean = false;
-    export let onUpdateColor: (color:string)=>void;
+    export let onUpdateColor: (color:HEX)=>void;
 
     let selectedColor: HTMLInputElement;
 

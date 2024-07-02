@@ -1,5 +1,5 @@
 import CanvasOb, { Shape } from "../CanvasOb";
-import type { HEX, shapeType } from "../CanvasOb";
+import type { shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
 import Circle from "../shapes/Circle";
 import Triangle from "../shapes/Triangle";

@@ -5,7 +5,7 @@
 
     export let actionText: string = "Continue";
     export let cancelText: string = "Go Back";
-    export let onPressAction: ({}) => void = () => {};
+    export let onPressAction: () => void = () => {};
     export let onPressCancel: () => void = () => {};
     export let cancelButton: boolean = true;
 </script>
@@ -17,18 +17,18 @@
             <form class="flex flex-col space-y-2">
                 <div class="flex justify-between">
                     <label for="customScale" class="text-neutral-700">Custom Scale</label>
-                    <input id="customScale" class="w-12 rounded-sm bg-neutral-100" />
+                    <input id="customScale" class="w-8 rounded-sm bg-neutral-100 text-right" placeholder="2x" />
                 </div>
                 <div class="flex items-center justify-between">
-                    <p class="text-neutral-700">Use Color</p>
+                    <p class="text-neutral-700">Use Full Color</p>
                     <Toggle />
                 </div>
                 <div class="flex items-center justify-between">
-                    <p class="text-neutral-700">Generate Verbose Code</p>
+                    <p class="text-neutral-700">Use Verbose Code</p>
                     <Toggle />
                 </div>
                 <div class="flex items-center justify-between">
-                    <p class="text-neutral-700">Show "Smart" Objects (beta)</p>
+                    <p class="text-neutral-700">Show Compound Objects</p>
                     <Toggle />
                 </div>
             </form>

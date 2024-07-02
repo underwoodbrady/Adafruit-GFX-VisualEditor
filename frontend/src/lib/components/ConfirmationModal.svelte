@@ -13,7 +13,7 @@
 </script>
 <Modal>
     <div class="flex flex-col justify-between h-full flex-1">
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 mb-8">
             <h2 class="font-semibold text-xl">{title}</h2>
             <p class="text-neutral-700">{text}</p>
         </div>

@@ -50,6 +50,6 @@
         class="flex items-center space-x-2 p-2 -m-2 hover:bg-neutral-200 duration-75 rounded-sm"
     >
         <img src="/github.svg" alt="Github Logo" class="h-4" />
-        <p class="text-sm"> Beta V0.1</p>
+        <p class="text-sm"> v0.0.8</p>
     </a>
 </header>

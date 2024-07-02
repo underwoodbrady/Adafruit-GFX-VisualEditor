@@ -1,6 +1,5 @@
 <script lang="ts">
     import Color from "$lib/components/Color.svelte";
-    type HEX = `#${string}`;
 
     export let colors:HEX[];
     export let selectedColor:HEX;

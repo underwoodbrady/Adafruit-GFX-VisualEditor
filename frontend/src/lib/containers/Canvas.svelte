@@ -1,11 +1,13 @@
 <script lang="ts">
     import { afterUpdate, onMount } from "svelte";
+    import { Tools } from "../../routes/tools";
     import type CanvasOb from "../../classes/CanvasOb";
     import Cell from "../../classes/Cell";
     import {
         canvasRedraws,
         objectListWritable,
         selectedObject,
+        objectListStates,
     } from "./objectList";
     import Rect from "../../classes/shapes/Rect";
     import Circle from "../../classes/shapes/Circle";
@@ -16,12 +18,10 @@
     import RoundRect from "../../classes/shapes/RoundRect";
     import Heart from "../../classes/compoundshapes/Heart";
     import Star from "../../classes/compoundshapes/Star";
-    import Polygon from "../../classes/compoundshapes/Polygon";
-
-    type HEX = `#${string}`;
+    // import Polygon from "../../classes/compoundshapes/Polygon";
 
     export let selectedColor: HEX;
-    export let selectedTool: { name: string; image: string };
+    export let selectedToolName: Tools;
     export let canvasDisplayedWidth: number;
     export let canvasDisplayedHeight: number;
     export let canvasScale: number;
@@ -32,7 +32,6 @@
 
     let cellList: Cell[][] = [];
     let objectList: CanvasOb[] = [];
-    let objectStates: CanvasOb[] = []; //For undo feature (TODO: Expand to multiple (just undo one ob for now))
 
     /*Implement queue with max length of some number?*/
 
@@ -56,14 +55,13 @@
         const { mouseX, mouseY } = getMousePositions(e);
         startingMouseX = mouseX;
         startingMouseY = mouseY;
-        if (selectedTool.name == "paint-brush") {
+        if (selectedToolName == "paint-brush") {
             mouseMove(e);
             canvas.onmousemove = (e) => mouseMove(e);
         }
     };
 
     let addNewObject = (newObject: CanvasOb) => {
-        objectStates = objectList; // TODO: Update
         objectList.push(newObject);
         objectListWritable.set(objectList);
         mapObjectToCells(newObject);
@@ -100,7 +98,7 @@
 
         //TODO: Make sure its drawn top left to bottom right too
 
-        switch (selectedTool.name) {
+        switch (selectedToolName) {
             case "rect-open":
                 newObject = new Rect(
                     "outline",
@@ -210,19 +208,19 @@
                     "outline",
                     cellX,
                     cellY,
-                    widthHeightToRadius * 2,
+                    widthHeightToRadius,
                     selectedColor,
                 );
                 break;
-            case "polygon-open":
-                newObject = new Polygon(
-                    "outline",
-                    cellX,
-                    cellY,
-                    widthHeightToRadius * 2,
-                    selectedColor,
-                );
-                break;
+            // case "polygon-open":
+            //     newObject = new Polygon(
+            //         "outline",
+            //         cellX,
+            //         cellY,
+            //         widthHeightToRadius * 2,
+            //         selectedColor,
+            //     );
+            //     break;
             case "cursor":
                 ob = cellList[cellY][cellX].object;
                 if (!(ob == undefined)) selectedObject.set(ob);
@@ -348,7 +346,7 @@
     };
 
     let mapObjectToCells = (object: CanvasOb) => {
-        object.drawCells(cellList)
+        object.drawCells(cellList);
     };
 
     //Fully redraws canvas
@@ -382,6 +380,10 @@
         });
 
         objectListWritable.subscribe((objList) => {
+            // $objectListStates.push([...objList]);
+            // $objectListStates = $objectListStates;
+            // console.log("TEST", objList, $objectListStates);
+
             if (objList == objectList) return;
             objectList = objList;
             selectedObject.set(undefined);
@@ -390,7 +392,6 @@
     });
 
     afterUpdate(() => {
-        console.log($objectListWritable);
         if (!ctx) return; //Don't run on mount
         if ($objectListWritable.length > 0) return; //Don't run if there are objects
 

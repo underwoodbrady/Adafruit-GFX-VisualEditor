@@ -1,4 +1,4 @@
-import type {CanvasOb, HEX} from "./CanvasOb";
+import type {CanvasOb} from "./CanvasOb";
 
 /**
  * Represents a single pixel on the display grid and its corresponding properties

@@ -15,7 +15,6 @@ export enum Shape {
     Polygon = 'polygon',
 }
 export type shapeType = 'fill' | 'outline';
-export type HEX = `#${string}`;
 
 /**
  * Represents a canvas object with shape, type, and color properties.

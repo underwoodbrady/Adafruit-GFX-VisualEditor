@@ -1,5 +1,5 @@
 import CanvasOb, { Shape } from "../CanvasOb";
-import type { HEX, shapeType } from "../CanvasOb";
+import type { shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
 
 
@@ -21,8 +21,8 @@ class Star extends CanvasOb {
         for (let i = 0; i < 10; i++) {
             const radius = i % 2 === 0 ? this.r : innerR;
             const angle = (Math.PI * 2 * i) / 10 - Math.PI / 2;
-            const x = this.x + radius * Math.cos(angle);
-            const y = this.y + radius * Math.sin(angle);
+            const x = this.x + radius*2 * Math.cos(angle);
+            const y = this.y + radius*2 * Math.sin(angle);
             points.push([Math.round(x), Math.round(y)]);
         }
         return points;

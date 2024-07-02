@@ -10,9 +10,11 @@
     import Tooltip from "$lib/components/Tooltip.svelte";
     import TooltipTop from "$lib/components/TooltipTop.svelte";
     import ConfirmationModal from "$lib/components/ConfirmationModal.svelte";
+    import SettingsModal from "$lib/components/SettingsModal.svelte";
 
     /*Svelte Imports*/
     import {
+        objectListStates,
         objectListWritable,
         selectedObject,
     } from "$lib/containers/objectList";
@@ -26,7 +28,7 @@
     /*Utility Imports*/
     import { createFullCode } from "../createCode";
     import displayToLib from "../utils/displayToLib.json";
-    import SettingsModal from "$lib/components/SettingsModal.svelte";
+    import { Tools } from "./tools";
 
     let canvasTrueWidth: number;
     let canvasTrueHeight: number;
@@ -83,71 +85,78 @@
 
     let code: string = ``;
 
-    let tools = [
+    type ToolList = {
+        name: Tools;
+        image: string;
+        special?: boolean;
+        disabled?: boolean;
+    };
+
+    let tools: ToolList[] = [
         {
-            name: "rect-open",
+            name: Tools.RectOpen,
             image: "/rect-open.svg",
         },
         {
-            name: "rect-closed",
+            name: Tools.RectClosed,
             image: "/rect-closed.svg",
         },
         {
-            name: "round-rect-open",
+            name: Tools.RoundRectOpen,
             image: "/round-rect-open.svg",
         },
         {
-            name: "round-rect-closed",
+            name: Tools.RoundRectClosed,
             image: "/round-rect-closed.svg",
         },
         {
-            name: "circle-open",
+            name: Tools.CircleOpen,
             image: "/circle-open.svg",
         },
         {
-            name: "circle-closed",
+            name: Tools.CircleClosed,
             image: "/circle-closed.svg",
         },
         {
-            name: "tri-open",
+            name: Tools.TriangleOpen,
             image: "/tri-open.svg",
         },
         {
-            name: "tri-closed",
+            name: Tools.TriangleClosed,
             image: "/tri-closed.svg",
         },
         {
-            name: "line",
+            name: Tools.Line,
             image: "/line.svg",
         },
         {
-            name: "cursor",
+            name: Tools.Cursor,
             image: "/cursor.svg",
         },
         {
-            name: "paint-brush",
+            name: Tools.PaintBrush,
             image: "paint-brush.svg",
         },
         {
-            name: "paint-bucket",
+            name: Tools.PaintBucket,
             image: "/paint-bucket.svg",
         },
         {
-            name: "text",
+            name: Tools.Text,
             image: "/text.svg",
         },
         {
-            name: "image",
+            name: Tools.Image,
             image: "/image.svg",
             disabled: true,
         },
         {
-            name: "heart-closed",
+            name: Tools.HeartClosed,
             image: "/heart.svg",
             special: true,
         },
         {
-            name: "star-open",
+            name: Tools.StarOpen,
             image: "/star-open.svg",
             special: true,
         },
@@ -157,8 +166,6 @@
         //     special: true,
         // },
     ];
-
-    type HEX = `#${string}`;
 
     let colors: HEX[] = [
         "#ff0000",
@@ -184,7 +191,12 @@
         library: string;
     };
     let selectedLibrary: string;
-    let selectedTool: { name: string; image: string };
+    let selectedTool: {
+        name: Tools;
+        image: string;
+        special?: boolean;
+        disabled?: boolean;
+    };
     let selectedColor: HEX;
 
     let displayDropdownOpen: boolean = false;
@@ -200,7 +212,7 @@
 
     let hideSettingsModal = () => {
         displaySettingsModal = false;
-    }
+    };
 
     //TODO: Unify arrow functions vs traditional
     let setChoosenDisplay = (display: keyof typeof displayToLib) => {
@@ -261,7 +273,7 @@
         });
 
         showCode = true;
-        /*TODO: Improve animation to be more realistic - also a lot of this code is dogshit*/
+        /*TODO: Improve animation to be more realistic */
         let codegenAnim = setInterval(() => {
             if (currentStage == 1)
                 codeSection.scrollIntoView({
@@ -281,6 +293,9 @@
         selectedColor = colors[0];
         thisWindow = window;
     });
+
+    //TODO: Simplify components ex tooltip and tooltiptop
+    //TODO: Break Properties Panel into multiple components, make containers act more like containers and not just big components
 </script>
 
 <svelte:head>
@@ -305,7 +320,14 @@
     <section class="flex items-center space-x-4 place-self-end">
         <!--Settings-->
 
-        <IconButton icon="/undo.svg" onClick={() => {}} />
+        <IconButton 
+        icon="/undo.svg" 
+        onClick={() => {
+            // objectListWritable.set([...($objectListStates.at(-2))]);
+        }} />
+        <IconButton icon="/redo.svg" onClick={() => {
+
+        }} />
         <TextButton
             icon="/delete.svg"
             text="Clear"
@@ -315,9 +337,13 @@
                 code = "";
             }}
         />
-        <IconButton icon="/gear.svg" onClick={() => {
-            displaySettingsModal = true;
-        }} filled />
+        <IconButton
+            icon="/gear.svg"
+            onClick={() => {
+                displaySettingsModal = true;
+            }}
+            filled
+        />
         <TextButton
             icon="/code.svg"
             text="Generate"
@@ -363,10 +389,10 @@
                 </p>
                 <Canvas
                     {selectedColor}
-                    {selectedTool}
                     {canvasDisplayedWidth}
                     {canvasDisplayedHeight}
                     {canvasScale}
+                    selectedToolName={selectedTool.name}
                 />
             </div>
         {:else}
@@ -418,7 +444,7 @@
             <PropertiesPanel
                 {canvasTrueWidth}
                 {canvasTrueHeight}
-                selectedObject={selectedObject}
+                {selectedObject}
             />
         </div>
     </section>

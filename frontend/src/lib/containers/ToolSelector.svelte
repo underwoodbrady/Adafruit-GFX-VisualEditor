@@ -1,7 +1,8 @@
 <script lang="ts">
     import Tool from "$lib/components/Tool.svelte";
+    import { Tools } from "../../routes/tools";
 
-    type tool = { name: string; image: string, special?:boolean, disabled?: boolean };
+    type tool = { name: Tools, image: string, special?:boolean, disabled?: boolean };
 
     export let tools: tool[];
     export let selectedTool: tool;

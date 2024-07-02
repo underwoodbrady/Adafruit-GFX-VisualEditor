@@ -1,5 +1,5 @@
 import CanvasOb, { Shape } from "../CanvasOb";
-import type { HEX, shapeType } from "../CanvasOb";
+import type { shapeType } from "../CanvasOb";
 import type Cell from "../Cell";
 
 class Line extends CanvasOb {
