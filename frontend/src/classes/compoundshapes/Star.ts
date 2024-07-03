@@ -6,9 +6,9 @@ import type Cell from "../Cell";
 class Star extends CanvasOb {
     x: number; //X Position on display (from the left)
     y: number; //Y Position on display (from the top)
-    r:number; // Outer Radius of star
+    r: number; // Outer Radius of star
 
-    constructor(type: shapeType, x: number, y: number, r:number, color: HEX) {
+    constructor(type: shapeType, x: number, y: number, r: number, color: HEX) {
         super(Shape.Star, type, color);
         this.x = x;
         this.y = y;
@@ -18,11 +18,13 @@ class Star extends CanvasOb {
     private getStarPoints(): [number, number][] {
         let innerR = this.r * 0.382;
         const points: [number, number][] = [];
+        const drawnX = this.x + (this.r),
+            drawnY = this.y + (this.r);
         for (let i = 0; i < 10; i++) {
             const radius = i % 2 === 0 ? this.r : innerR;
             const angle = (Math.PI * 2 * i) / 10 - Math.PI / 2;
-            const x = this.x + radius*2 * Math.cos(angle);
-            const y = this.y + radius*2 * Math.sin(angle);
+            const x = drawnX + radius * Math.cos(angle);
+            const y = drawnY + radius * Math.sin(angle);
             points.push([Math.round(x), Math.round(y)]);
         }
         return points;
