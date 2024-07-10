@@ -14,7 +14,7 @@
 
     /*Svelte Imports*/
     import {
-        objectListStates,
+        objectListStatesWritable,
         objectListWritable,
         selectedObject,
     } from "$lib/containers/objectList";
@@ -214,6 +214,59 @@
         displaySettingsModal = false;
     };
 
+    let undoEnabled: boolean = false;
+    let redoEnabled: boolean = false;
+
+    let undoPressed = () => {
+        let currentIndex = $objectListStatesWritable[1];
+        if (
+            $objectListStatesWritable[1] == 0 ||
+            $objectListStatesWritable[0].length == 1
+        ) {
+            //At start of array
+            return;
+        } else if ($objectListStatesWritable[1] == -1) {
+            //First press of undo
+            $objectListStatesWritable[1] =
+                $objectListStatesWritable[0].length - 2;
+        } else if ($objectListStatesWritable[1] == 1) {
+            //Moving to start of array
+            undoEnabled = false;
+            $objectListStatesWritable[1] = $objectListStatesWritable[1] - 1;
+        } else {
+            // Any other time
+            $objectListStatesWritable[1] = $objectListStatesWritable[1] - 1;
+        }
+        redoEnabled = true;
+        $objectListStatesWritable = $objectListStatesWritable; //Force update
+        objectListWritable.set([
+            ...$objectListStatesWritable[0][$objectListStatesWritable[1]],
+        ]);
+    };
+
+    let redoPressed = () => {
+        if (
+            $objectListStatesWritable[1] == -1 ||
+            $objectListStatesWritable[1] >=
+                $objectListStatesWritable[0].length - 1
+        ) {
+            //At end of array
+            return;
+        } else if (
+            $objectListStatesWritable[1] >=
+            $objectListStatesWritable[0].length - 2
+        ) {
+            //Moving to end of array
+            redoEnabled = false;
+        }
+        undoEnabled = true;
+        $objectListStatesWritable[1] = $objectListStatesWritable[1] + 1;
+        $objectListStatesWritable = $objectListStatesWritable; //Force update
+        objectListWritable.set([
+            ...$objectListStatesWritable[0][$objectListStatesWritable[1]],
+        ]);
+    };
+
     //TODO: Unify arrow functions vs traditional
     let setChoosenDisplay = (display: keyof typeof displayToLib) => {
         if ($objectListWritable.length == 0) {
@@ -292,6 +345,18 @@
         selectedTool = tools[0];
         selectedColor = colors[0];
         thisWindow = window;
+        objectListWritable.subscribe((objList) => {
+            if (
+                objList.length == $objectListStatesWritable[0].at(-1)?.length ||
+                $objectListStatesWritable[1] != -1
+            )
+                return; //No change
+            $objectListStatesWritable[0].push([...objList]);
+            $objectListStatesWritable = $objectListStatesWritable;
+            if ($objectListStatesWritable[0].length > 1) undoEnabled = true;
+            redoEnabled = false;
+            //console.log("TEST", objList, $objectListStatesWritable);
+        });
     });
 
     //TODO: Simplify components ex tooltip and tooltiptop
@@ -320,18 +385,29 @@
     <section class="flex items-center space-x-4 place-self-end">
         <!--Settings-->
 
-        <IconButton 
-        icon="/undo.svg" 
-        onClick={() => {
-            // objectListWritable.set([...($objectListStates.at(-2))]);
-        }} />
-        <IconButton icon="/redo.svg" onClick={() => {
-
-        }} />
+        <IconButton
+            icon="/undo.svg"
+            onClick={undoPressed}
+            disabled={!undoEnabled}
+        />
+        <IconButton
+            icon="/redo.svg"
+            onClick={redoPressed}
+            disabled={!redoEnabled}
+        />
         <TextButton
             icon="/delete.svg"
             text="Clear"
             onClick={() => {
+                if (
+                    $objectListStatesWritable[1] ==
+                    $objectListStatesWritable[0].length - 1
+                ) {
+                    $objectListStatesWritable[1] = -1;
+                    $objectListStatesWritable = $objectListStatesWritable;
+                } else if ($objectListStatesWritable[1] != -1) {
+                    objectListStatesWritable.set([[[]], -1]); //TODO: Make this a function that can be called from multiple files, also could just delete everything in front of the pointer instead of everything 
+                }
                 objectListWritable.set([]);
                 showCode = false;
                 code = "";

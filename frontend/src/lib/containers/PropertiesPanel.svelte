@@ -1,7 +1,7 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
     import type CanvasOb from "../../classes/CanvasOb";
-    import { canvasRedraws, objectListWritable } from "./objectList";
+    import { canvasRedraws, objectListStatesWritable, objectListWritable } from "./objectList";
     import type Text from "../../classes/shapes/Text";
     import IconButton from "$lib/components/IconButton.svelte";
     import { type Writable } from "svelte/store";
@@ -66,6 +66,14 @@
     };
 
     let deleteObject = () => {
+        if($objectListStatesWritable[1] == $objectListStatesWritable[0].length-1){
+            //If at the end but nothing changed reset index to -1
+            $objectListStatesWritable[1] = -1
+            $objectListStatesWritable = $objectListStatesWritable;
+        }else if($objectListStatesWritable[1] != -1){
+            //If anywhere else than -1 reset the objectliststate
+            objectListStatesWritable.set([[[]],-1]);
+        }
         objectListWritable.update((currentVal) =>
             currentVal.filter((object) => object != $selectedObject),
         );

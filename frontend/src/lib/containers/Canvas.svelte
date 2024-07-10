@@ -5,9 +5,9 @@
     import Cell from "../../classes/Cell";
     import {
         canvasRedraws,
+        objectListStatesWritable,
         objectListWritable,
         selectedObject,
-        objectListStates,
     } from "./objectList";
     import Rect from "../../classes/shapes/Rect";
     import Circle from "../../classes/shapes/Circle";
@@ -62,6 +62,12 @@
     };
 
     let addNewObject = (newObject: CanvasOb) => {
+        if($objectListStatesWritable[1] == $objectListStatesWritable[0].length-1){
+            $objectListStatesWritable[1] = -1
+            $objectListStatesWritable = $objectListStatesWritable;
+        }else if($objectListStatesWritable[1] != -1){
+            objectListStatesWritable.set([[[]],-1]);
+        }
         objectList.push(newObject);
         objectListWritable.set(objectList);
         mapObjectToCells(newObject);
@@ -380,10 +386,6 @@
         });
 
         objectListWritable.subscribe((objList) => {
-            // $objectListStates.push([...objList]);
-            // $objectListStates = $objectListStates;
-            // console.log("TEST", objList, $objectListStates);
-
             if (objList == objectList) return;
             objectList = objList;
             selectedObject.set(undefined);
