@@ -214,6 +214,19 @@
         displaySettingsModal = false;
     };
 
+    let settingsOb: {
+        scale: number;
+        color: boolean;
+        verbose: boolean;
+        compound: boolean;
+    } = {
+        scale: canvasScale,
+        color: selectedDisplay
+        ? displayToLib[selectedDisplay].color : true,
+        verbose: true,
+        compound: true,
+    };
+
     let undoEnabled: boolean = false;
     let redoEnabled: boolean = false;
 
@@ -406,7 +419,7 @@
                     $objectListStatesWritable[1] = -1;
                     $objectListStatesWritable = $objectListStatesWritable;
                 } else if ($objectListStatesWritable[1] != -1) {
-                    objectListStatesWritable.set([[[]], -1]); //TODO: Make this a function that can be called from multiple files, also could just delete everything in front of the pointer instead of everything 
+                    objectListStatesWritable.set([[[]], -1]); //TODO: Make this a function that can be called from multiple files, also could just delete everything in front of the pointer instead of everything
                 }
                 objectListWritable.set([]);
                 showCode = false;
@@ -597,6 +610,7 @@
     <SettingsModal
         onPressCancel={hideSettingsModal}
         onPressAction={hideSettingsModal}
+        {settingsOb}
     />
 {/if}
 <footer />

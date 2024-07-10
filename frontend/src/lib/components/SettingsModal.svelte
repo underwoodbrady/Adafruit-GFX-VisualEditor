@@ -8,6 +8,7 @@
     export let onPressAction: () => void = () => {};
     export let onPressCancel: () => void = () => {};
     export let cancelButton: boolean = true;
+    export let settingsOb:any;
 </script>
 
 <Modal>
